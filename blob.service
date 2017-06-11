@@ -1,0 +1,10 @@
+[Unit]
+Description=blob servers
+
+[Service]
+Type=oneshot
+ExecStart=/bin/bash /home/test.sh
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target
