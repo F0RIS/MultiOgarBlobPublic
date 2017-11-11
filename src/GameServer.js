@@ -66,11 +66,11 @@ function GameServer() {
         serverTimeout: 300,         // Seconds to keep connection alive for non-responding client
         serverWsModule: 'ws',       // WebSocket module: 'ws' or 'uws' (install npm package before using uws)
         serverMaxConnections: 64,   // Maximum number of connections to the server. (0 for no limit)
-        serverIpLimit: 4,           // Maximum number of connections from the same IP (0 for no limit)
+        serverIpLimit: 0,           // Maximum number of connections from the same IP (0 for no limit)
         serverMinionIgnoreTime: 30, // minion detection disable time on server startup [seconds]
         serverMinionThreshold: 10,  // max connections within serverMinionInterval time period, which will not be marked as minion
         serverMinionInterval: 1000, // minion detection interval [milliseconds]
-        serverPort: 1111,            // Server port
+        serverPort: 1111,           // Server port
         serverBind: '0.0.0.0',      // Network interface binding
         serverTracker: 0,           // Set to 1 if you want to show your server on the tracker http://ogar.mivabe.nl/master
         serverGamemode: 0,          // Gamemode, 0 = FFA, 1 = Teams
@@ -78,17 +78,17 @@ function GameServer() {
         serverViewBaseX: 1920,      // Base client screen resolution. Used to calculate view area. Warning: high values may cause lag
         serverViewBaseY: 1080,      // min value is 1920x1080
         serverMinScale: 0.15,       // Min scale for player (low value leads to lags due to large visible area)
-        serverSpectatorScale: 0.4,  // Scale (field of view) used for free roam spectators (low value leads to lags, vanilla=0.4, old vanilla=0.25)
-        serverStatsPort: 8888,        // Port for stats server. Having a negative number will disable the stats server.
-        serverStatsUpdate: 60,      // Update interval of server stats in seconds
-        serverScrambleLevel: 2,     // Toggles scrambling of coordinates. 0 = No scrambling, 1 = lightweight scrambling. 2 = full scrambling (also known as scramble minimap); 3 - high scrambling (no border)
+        serverSpectatorScale: 0.3,  // Scale (field of view) used for free roam spectators (low value leads to lags, vanilla=0.4, old vanilla=0.25)
+        serverStatsPort: 8888,      // Port for stats server. Having a negative number will disable the stats server.
+        serverStatsUpdate: 5,       // Update interval of server stats in seconds
+        serverScrambleLevel: 0,     // Toggles scrambling of coordinates. 0 = No scrambling, 1 = lightweight scrambling. 2 = full scrambling (also known as scramble minimap); 3 - high scrambling (no border)
         serverMaxLB: 10,            // Controls the maximum players displayed on the leaderboard.
         serverChat: 1,              // Set to 1 to allow chat; 0 to disable chat.
         serverChatAscii: 1,         // Set to 1 to disable non-ANSI letters in the chat (english only mode)
-        separateChatForTeams: 0,    // Set to 1 to separate chat for game modes with teams like 'Teams'
+        separateChatForTeams: 1,    // Set to 1 to separate chat for game modes with teams like 'Teams'
         
-        serverName: 'MultiOgar #1', // Server name
-        serverWelcome1: 'Welcome to private server!\nType /help to see commands',      // First server welcome message
+        serverName: 'MultiOgarBlob', // Server name
+        serverWelcome1: 'Welcome to Blob!\nType /help too see commands!',// First server welcome message
         serverWelcome2: '',         // Second server welcome message (for info, etc)
         
         borderWidth: 14142,         // Map border size (Vanilla value: 14142)
@@ -96,8 +96,8 @@ function GameServer() {
         
         foodMinSize: 10,            // Minimum food size (vanilla 10)
         foodMaxSize: 20,            // Maximum food size (vanilla 20)
-        foodMinAmount: 1000,        // Minimum food cells on the map
-        foodMaxAmount: 2000,        // Maximum food cells on the map
+        foodMinAmount: 1500,        // Minimum food cells on the map
+        foodMaxAmount: 2500,        // Maximum food cells on the map
         foodSpawnAmount: 30,        // The number of food to spawn per interval
         foodMassGrow: 1,            // Enable food mass grow ?
         spawnInterval: 20,          // The interval between each food cell spawn in ticks (1 tick = 50 ms)
@@ -118,7 +118,7 @@ function GameServer() {
         playerMinSplitSize: 60,     // Minimum player cell size allowed to split (mass = 60*60/100 = 36) 
         playerStartSize: 64,        // Start size of the player cell (mass = 64*64/100 = 41)
         playerMaxCells: 16,         // Max cells the player is allowed to have
-        playerSpeed: 1,             // Player speed multiplier
+        playerSpeed: 1.3,             // Player speed multiplier
         playerDecayRate: .002,      // Amount of player cell size lost per second
         playerRecombineTime: 30,    // Base time in seconds before a cell is allowed to recombine
         playerMaxNickLength: 15,    // Maximum nick length
