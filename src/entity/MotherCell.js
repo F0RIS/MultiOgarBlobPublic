@@ -23,6 +23,7 @@ MotherCell.prototype = new Cell();
 
 MotherCell.prototype.canEat = function (cell) {
     return cell.cellType == 0 ||    // can eat player cell
+        cell.cellType == 2 ||       // can eat virus
         cell.cellType == 3;         // can eat ejected mass
 };
 
