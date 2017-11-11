@@ -111,7 +111,7 @@ function GameServer() {
         ejectSizeLoss: 43,          // Eject size which will be substracted from player cell (vanilla 43?)
         ejectDistance: 780,         // vanilla 780
         ejectCooldown: 3,           // min ticks between ejects
-        ejectSpawnPlayer: 0.5,        // if 1 then player may be spawned from ejected mass
+        ejectSpawnPlayer: 1,        // if 1 then player may be spawned from ejected mass
         
         playerMinSize: 32,          // Minimym size of the player cell (mass = 32*32/100 = 10.24)
         playerMaxSize: 1500,        // Maximum size of the player cell (mass = 1500*1500/100 = 22500)
