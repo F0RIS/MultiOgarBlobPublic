@@ -70,7 +70,7 @@ function GameServer() {
         serverMinionIgnoreTime: 30, // minion detection disable time on server startup [seconds]
         serverMinionThreshold: 10,  // max connections within serverMinionInterval time period, which will not be marked as minion
         serverMinionInterval: 1000, // minion detection interval [milliseconds]
-        serverPort: 443,            // Server port
+        serverPort: 1111,            // Server port
         serverBind: '0.0.0.0',      // Network interface binding
         serverTracker: 0,           // Set to 1 if you want to show your server on the tracker http://ogar.mivabe.nl/master
         serverGamemode: 0,          // Gamemode, 0 = FFA, 1 = Teams
@@ -79,16 +79,16 @@ function GameServer() {
         serverViewBaseY: 1080,      // min value is 1920x1080
         serverMinScale: 0.15,       // Min scale for player (low value leads to lags due to large visible area)
         serverSpectatorScale: 0.4,  // Scale (field of view) used for free roam spectators (low value leads to lags, vanilla=0.4, old vanilla=0.25)
-        serverStatsPort: 88,        // Port for stats server. Having a negative number will disable the stats server.
+        serverStatsPort: 8888,        // Port for stats server. Having a negative number will disable the stats server.
         serverStatsUpdate: 60,      // Update interval of server stats in seconds
         serverScrambleLevel: 2,     // Toggles scrambling of coordinates. 0 = No scrambling, 1 = lightweight scrambling. 2 = full scrambling (also known as scramble minimap); 3 - high scrambling (no border)
         serverMaxLB: 10,            // Controls the maximum players displayed on the leaderboard.
         serverChat: 1,              // Set to 1 to allow chat; 0 to disable chat.
-        serverChatAscii: 0,         // Set to 1 to disable non-ANSI letters in the chat (english only mode)
+        serverChatAscii: 1,         // Set to 1 to disable non-ANSI letters in the chat (english only mode)
         separateChatForTeams: 0,    // Set to 1 to separate chat for game modes with teams like 'Teams'
         
         serverName: 'MultiOgar #1', // Server name
-        serverWelcome1: 'Welcome to MultiOgar server!',      // First server welcome message
+        serverWelcome1: 'Welcome to private server!\nType /help to see commands',      // First server welcome message
         serverWelcome2: '',         // Second server welcome message (for info, etc)
         
         borderWidth: 14142,         // Map border size (Vanilla value: 14142)
@@ -111,7 +111,7 @@ function GameServer() {
         ejectSizeLoss: 43,          // Eject size which will be substracted from player cell (vanilla 43?)
         ejectDistance: 780,         // vanilla 780
         ejectCooldown: 3,           // min ticks between ejects
-        ejectSpawnPlayer: 1,        // if 1 then player may be spawned from ejected mass
+        ejectSpawnPlayer: 0.5,        // if 1 then player may be spawned from ejected mass
         
         playerMinSize: 32,          // Minimym size of the player cell (mass = 32*32/100 = 10.24)
         playerMaxSize: 1500,        // Maximum size of the player cell (mass = 1500*1500/100 = 22500)
