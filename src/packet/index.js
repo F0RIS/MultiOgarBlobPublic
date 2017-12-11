@@ -13,4 +13,5 @@
     UpdateMinimap: require('./UpdateMinimap'),
     DrawLine: require('./DrawLine'),
     SetParams: require('./SetParams'),
+    PlayerList: require('./PlayerList'),    
 };

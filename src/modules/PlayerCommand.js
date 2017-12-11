@@ -1,6 +1,7 @@
 ﻿var Entity = require('../entity');
 var Logger = require('./Logger');
 var UserRoleEnum = require("../enum/UserRoleEnum");
+var Packet = require("../packet");
 
 
 var ErrorTextInvalidCommand = "ERROR: Unknown command, type /help for command list";
@@ -54,8 +55,8 @@ PlayerCommand.prototype.executeCommandLine = function (commandLine) {
 var playerCommands = {
     help: function (args) {
 
-        this.writeLine("\nAvailable commands:\n/kill - self kill\n/clear - clear chat\n/mute - mute chat\n/unmute - unmute chat\n/info - get info about server\n/share - share this server ip\n/help - this commands list");
-	
+        this.writeLine("\nAvailable commands:\n/kill - self kill\n/clear - clear chat\n/mute - mute chat\n/unmute - unmute chat\n/info - get info about server\n/share - share this server ip\n/pl - playerlist\n/help - this commands list");
+        
     },
     info: function (args) {
 
@@ -110,6 +111,29 @@ var playerCommands = {
             this.gameServer.addNode(food);
         }
         this.writeLine("You killed yourself");
+    },
+    pl: function (args) {
+        // if (this.playerTracker.userRole < UserRoleEnum.MODER) {
+        //     this.writeLine("ERROR: access denied!");
+        //     return;
+        // }
+        var res = [];
+        var sockets = this.gameServer.clients.slice(0);
+        for (var i = 0; i < sockets.length; i++) {
+            var socket = sockets[i];
+            var client = socket.playerTracker;
+
+            var obj = {
+                id: client.pID,
+                s_id: client.userID, //social id
+                nick: client.getFriendlyName(),
+                score: (client.getScore() / 100) >> 0
+            }
+            res.push(obj);
+        }
+        // console.log(res);
+        // this.gameServer.sendChatMessage(null, this.playerTracker, JSON.stringify(res));
+        this.playerTracker.socket.sendPacket(new Packet.PlayerList(res));
     },
     login: function (args) {
         var password = (args || "").trim();
