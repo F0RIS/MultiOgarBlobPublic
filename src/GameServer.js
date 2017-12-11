@@ -133,6 +133,7 @@ function GameServer() {
     };
     
     this.ipBanList = [];
+    this.ipBanListTemporary = []; //to exclude temporary ban from saving to file
     this.minionTest = [];
     this.userList = [];
     this.badWords = [];
@@ -783,6 +784,10 @@ GameServer.prototype.spawnPlayer = function (player, pos, size) {
         // Get starting mass
         size = Math.max(player.startingSize ? player.startingSize: this.config.playerStartSize, this.config.playerStartSize);
     }
+
+    // player.socket.playerCommand.executeCommandLine("mod_mute 1 1");
+    // player.socket.playerCommand.executeCommandLine("mod_ban 1 1");
+
 
     /*   DEV MODE
      Example: nickname: <kraken>%dev%2500%DEV
@@ -1643,7 +1648,7 @@ GameServer.prototype.saveIpBanList = function () {
     try {
         var blFile = fs.createWriteStream(fileNameIpBan);
         // Sort the blacklist and write.
-        this.ipBanList.sort().forEach(function (v) {
+        this.ipBanList.filter(item => this.ipBanListTemporary.indexOf(item)).sort().forEach(function (v) {
             blFile.write(v + '\n');
         });
         blFile.end();
@@ -1677,7 +1682,7 @@ GameServer.prototype.checkIpBan = function (ipAddress) {
     return false;
 };
 
-GameServer.prototype.banIp = function (ip) {
+GameServer.prototype.banIp = function (ip, duration) {
     var ipBin = ip.split('.');
     if (ipBin.length != 4) {
         Logger.warn("Invalid IP format: " + ip);
@@ -1692,6 +1697,9 @@ GameServer.prototype.banIp = function (ip) {
         return;
     }
     this.ipBanList.push(ip);
+    if (duration){
+        this.ipBanListTemporary.push(ip);
+    }
     if (ipBin[2] == "*" || ipBin[3] == "*") {
         Logger.print("The IP sub-net " + ip + " has been banned");
     } else {
