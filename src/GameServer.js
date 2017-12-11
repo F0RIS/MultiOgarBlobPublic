@@ -1615,7 +1615,7 @@ GameServer.prototype.userLogin = function (ip, password) {
         var user = this.userList[i];
         if (user.password != password)
             continue;
-        if (user.ip && user.ip != ip)
+        if (user.ip && user.ip != ip && user.ip != "*") // * - means any IP
             continue;
         return user;
     }
@@ -1728,30 +1728,32 @@ GameServer.prototype.unbanIp = function (ip) {
 };
 
 // Kick player by ID. Use ID = 0 to kick all players
-GameServer.prototype.kickId = function (id) {
+GameServer.prototype.kickId = function (id, moderator) {
     var count = 0;
     this.clients.forEach(function (socket) {
         if (socket.isConnected == false)
-            return;
+        return;
         if (id != 0 && socket.playerTracker.pID != id)
-            return;
+        return;
         // remove player cells
         socket.playerTracker.cells.forEach(function (cell) {
             this.removeNode(cell);
         }, this);
+        
+        var name = socket.playerTracker.getFriendlyName();
+        var whoKick = moderator ? moderator : null;
+        Logger.print("Kicked \"" + name + "\"");
+        this.sendChatMessage(whoKick, null, "Kicked \"" + name + "\""); // notify to don't confuse with server bug
         // disconnect
         socket.close(1000, "Kicked from server");
-        var name = socket.playerTracker.getFriendlyName();
-        Logger.print("Kicked \"" + name + "\"");
-        this.sendChatMessage(null, null, "Kicked \"" + name + "\""); // notify to don't confuse with server bug
         count++;
     }, this);
     if (count > 0)
-        return;
+    return;
     if (id == 0)
-        Logger.warn("No players to kick!");
+    Logger.warn("No players to kick!");
     else
-        Logger.warn("Player with ID " + id + " not found!");
+    Logger.warn("Player with ID " + id + " not found!");
 };
 
 // Stats server
