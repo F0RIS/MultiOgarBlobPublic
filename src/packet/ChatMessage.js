@@ -3,10 +3,11 @@ var BinaryWriter = require("./BinaryWriter");
 var UserRoleEnum = require("../enum/UserRoleEnum");
 
 
-function ChatMessage(sender, message, sendUserID) {
+function ChatMessage(sender, message, player) {
     this.sender = sender;
     this.message = message;
-    this.sendUserID = sendUserID;
+    this.sendUserID = player.sendUserID;
+    this.sendPlayerID = player.userRole > UserRoleEnum.USER;
 }
 
 module.exports = ChatMessage;
@@ -41,9 +42,18 @@ ChatMessage.prototype.build = function (protocol) {
         flags = 0x40;           // admin message
     else if (this.sender.userRole == UserRoleEnum.MODER)
         flags = 0x20;           // moder message
+    else if (this.sender.userRole == UserRoleEnum.USER) //youtuber
+        flags = 0x08;           // youtuber message
 
     if (this.sendUserID && this.sender && this.sender.userID != 0){
         flags |= 0x10;
+    }
+
+    if (this.sender && this.sendPlayerID) { // must be send only to moderators
+        flags |= 0x04;
+    }
+    if (this.sender && this.sender.showChatSuffix) {
+        flags |= 0x02;
     }
     
     writer.writeUInt8(flags);
@@ -54,6 +64,10 @@ ChatMessage.prototype.build = function (protocol) {
     if (this.sendUserID && this.sender && this.sender.userID != 0){
         writer.writeDouble(this.sender.userID);
     }
+    
+    if (this.sender && this.sendPlayerID) { //sending player ID to moderators
+        writer.writeUInt32(this.sender.pID);
+    }    
     
     if (protocol <= 5) {
         writer.writeStringZeroUnicode(name);

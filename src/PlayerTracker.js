@@ -16,6 +16,7 @@ function PlayerTracker(gameServer, socket) {
     this.startingSize = gameServer ? gameServer.config.playerStartSize : 0;
     
     this.userRole = UserRoleEnum.GUEST;
+    this.showChatSuffix = false;
     this.userAuth = null;
     this.isRemoved = false;
     this.isCloseRequested = false;

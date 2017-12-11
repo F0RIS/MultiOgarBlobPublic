@@ -625,10 +625,10 @@ GameServer.prototype.sendChatMessage = function (from, to, message) {
         if (!to || to == this.clients[i].playerTracker){
             if (this.config.separateChatForTeams && this.gameMode.haveTeams){
                 if (from == null /*server*/ || from.team === this.clients[i].playerTracker.team){
-                    client.sendPacket(new Packet.ChatMessage(from, message, client.playerTracker.sendUserID));
+                    client.sendPacket(new Packet.ChatMessage(from, message, client.playerTracker));
                 }
             } else {
-                client.sendPacket(new Packet.ChatMessage(from, message, client.playerTracker.sendUserID));
+                client.sendPacket(new Packet.ChatMessage(from, message, client.playerTracker));
             }
         }
     }
