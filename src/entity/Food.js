@@ -1,9 +1,10 @@
 ﻿var Cell = require('./Cell');
+var CellType = require("../enum/CellTypeEnum");
 
 function Food() {
     Cell.apply(this, Array.prototype.slice.call(arguments));
     
-    this.cellType = 1;
+    this.cellType = CellType.FOOD;
 }
 
 module.exports = Food;

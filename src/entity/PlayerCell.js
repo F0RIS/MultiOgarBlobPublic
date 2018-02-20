@@ -1,9 +1,10 @@
 ﻿var Cell = require('./Cell');
+var CellType = require("../enum/CellTypeEnum");
 
 function PlayerCell() {
     Cell.apply(this, Array.prototype.slice.call(arguments));
     
-    this.cellType = 0;
+    this.cellType = CellType.PLAYER_CELL;
     this._canRemerge = false;
 }
 

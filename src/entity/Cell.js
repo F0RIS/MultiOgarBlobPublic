@@ -1,7 +1,9 @@
-﻿function Cell(gameServer, owner, position, size) {
+﻿var CellType = require("../enum/CellTypeEnum");
+
+function Cell(gameServer, owner, position, size) {
     this.gameServer = gameServer;
     this.owner = owner;     // playerTracker that owns this cell
-    
+
     this.tickOfBirth = 0;
     this.color = { r: 0, g: 0, b: 0 };
     this.position = { x: 0, y: 0 };
@@ -14,12 +16,12 @@
     this.isAgitated = false;// If true, then this cell has waves on it's outline
     this.killedBy = null;   // Cell that ate this cell
     this.isMoving = false;  // Indicate that cell is in boosted mode
-    
+
     this.boostDistance = 0;
     this.boostDirection = { x: 1, y: 0, angle: Math.PI / 2 };
     this.boostMaxSpeed = 78;    // boost speed limit, sqrt(780*780/100)
     this.ejector = null;
-    
+
     if (this.gameServer != null) {
         this.nodeId = this.gameServer.getNextNodeId();
         this.tickOfBirth = this.gameServer.getTick();
@@ -79,14 +81,31 @@ Cell.prototype.getMass = function () {
     return this._mass;
 };
 
+Cell.prototype.resetSpeed = function () {
+    this._speed = null;
+};
+
 Cell.prototype.getSpeed = function () {
     if (this._speed == null) {
         var speed = 2.1106 / Math.pow(this.getSize(), 0.449);
         // tickStep=40ms
-        this._speed = speed * 40 * this.gameServer.config.playerSpeed;
+        var configSpeed = this.applyBoosterSpeed(this.gameServer.config.playerSpeed);
+       
+        this._speed = speed * 40 * configSpeed;
     }
     return this._speed;
 };
+
+Cell.prototype.applyBoosterSpeed = function (speed) {
+    if (this.owner) {
+        //check for speed boost
+        var booster = this.owner.activeBoosters[CellType.SPEED_BOOSTER];
+        if (booster) {
+            speed *= booster.value;
+        }
+    }
+    return speed;
+}
 
 Cell.prototype.setAngle = function (angle) {
     this.boostDirection = {
@@ -131,10 +150,21 @@ Cell.prototype.canEat = function (cell) {
 
 Cell.prototype.onEat = function (prey) {
     // Called to eat prey cell
-    this.setSize(Math.sqrt(this.getSizeSquared() + prey.getSizeSquared()));
+    // this.setSize(Math.sqrt(this.getSizeSquared() + prey.getSizeSquared()));
+    if (prey.cellType < CellType.SPEED_BOOSTER) {
+        this.setSize(Math.sqrt(this.getSizeSquared() + prey.getSizeSquared()));
+    }
 };
 
 Cell.prototype.onEaten = function (hunter) {
+    if (hunter.owner) {
+        if (this.cellType == CellType.FOOD) {
+            // hunter.owner.onEatFood(this);
+        }
+        if (this.cellType == CellType.SPEED_BOOSTER) {
+            hunter.owner.onEatBooster(this);
+        }
+    }
 };
 
 Cell.prototype.onAdd = function (gameServer) {
@@ -152,7 +182,7 @@ Cell.prototype.onRemove = function (gameServer) {
 Cell.prototype.setBoost = function (distance, angle, maxSpeed) {
     if (isNaN(angle)) angle = Math.PI / 2;
     if (!maxSpeed) maxSpeed = 78;
-    
+
     this.boostDistance = distance;
     this.boostMaxSpeed = maxSpeed;
     this.setAngle(angle);
@@ -175,9 +205,9 @@ Cell.prototype.move = function (border) {
     speed = Math.min(speed, this.boostDistance);    // avoid overlap 0
     this.boostDistance -= speed;
     if (this.boostDistance < 1) this.boostDistance = 0;
-    
+
     var v = this.clipVelocity(
-        { x: this.boostDirection.x * speed, y: this.boostDirection.y * speed }, 
+        { x: this.boostDirection.x * speed, y: this.boostDirection.y * speed },
         border);
     this.position.x += v.x;
     this.position.y += v.y;
@@ -231,7 +261,7 @@ Cell.prototype.clipVelocity = function (v, border) {
             p = pv;
     }
     // p - stop point on the border
-    
+
     // reflect angle
     var angle = this.getAngle();
     if (p == ph) {

@@ -1,9 +1,10 @@
 ﻿var Cell = require('./Cell');
+var CellType = require("../enum/CellTypeEnum");
 
 function EjectedMass() {
     Cell.apply(this, Array.prototype.slice.call(arguments));
     
-    this.cellType = 3;
+    this.cellType = CellType.EJECT;
 }
 
 module.exports = EjectedMass;

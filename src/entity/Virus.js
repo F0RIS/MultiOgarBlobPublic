@@ -1,10 +1,11 @@
 ﻿var Cell = require('./Cell');
 var Logger = require('../modules/Logger');
+var CellType = require("../enum/CellTypeEnum");
 
 function Virus() {
     Cell.apply(this, Array.prototype.slice.call(arguments));
     
-    this.cellType = 2;
+    this.cellType = CellType.VIRUS;
     this.isSpiked = true;
     this.fed = 0;
     this.isMotherCell = false; // Not to confuse bots

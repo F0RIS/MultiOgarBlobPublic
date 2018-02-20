@@ -1,11 +1,12 @@
 ﻿var Cell = require('./Cell');
 var Food = require('./Food');
 var Virus = require('./Virus');
+var CellType = require("../enum/CellTypeEnum");
 
 function MotherCell() {
     Cell.apply(this, Array.prototype.slice.call(arguments));
     
-    this.cellType = 2;
+    this.cellType = CellType.FOOD;
     this.isSpiked = true;
     this.isMotherCell = true;       // Not to confuse bots
     this.setColor({ r: 0xce, g: 0x63, b: 0x63 });

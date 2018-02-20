@@ -5,4 +5,5 @@
     Virus: require('./Virus'),
     MotherCell: require('./MotherCell'),
     EjectedMass: require('./EjectedMass'),
+    SpeedBooster: require('./SpeedBooster'),
 };
