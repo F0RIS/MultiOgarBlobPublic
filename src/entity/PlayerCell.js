@@ -101,4 +101,9 @@ PlayerCell.prototype.onRemove = function (gameServer) {
     }
     // Gamemode actions
     gameServer.gameMode.onCellRemove(this);
+
+    //PlayerTracker action
+    if (this.owner){
+        this.owner.onPlayerCellRemove(this);
+    }
 };

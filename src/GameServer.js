@@ -133,6 +133,8 @@ function GameServer() {
         tourneyAutoFillPlayers: 1,  // The timer for filling the server with bots will not count down unless there is this amount of real players
 
         //Boosters
+        speedBoosterTime: 15,       //how much time it will works
+        speedBoosterValue: 1.45,    // multiplyer to increase speed
         speedBoosterSize: 141,      //mass = 200
         speedBoosterMinAmount: 20,
         speedBoosterMaxAmount: 50

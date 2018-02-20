@@ -6,8 +6,8 @@ function SpeedBooster() {
     
     this.cellType = CellType.SPEED_BOOSTER;
     
-    this.effectValue  = 1.55; // percentage
-    this.effectTime = 5; //sec
+    this.effectValue  = this.gameServer.config.speedBoosterValue;
+    this.effectTime = this.gameServer.config.speedBoosterTime; 
 
     this.setColor({ r: 99, g: 179, b: 228 });
 }

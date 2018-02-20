@@ -154,7 +154,7 @@ PacketHandler.prototype.message_setParams = function (message) {
     if ((flags & 2) != 0){
         this.socket.playerTracker.showChatSuffix = true;
     }
-    if ((flags & 3) != 0){
+    if ((flags & 4) != 0){
         this.socket.playerTracker.sendCellType = true;
     }
     

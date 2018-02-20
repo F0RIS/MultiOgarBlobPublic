@@ -632,6 +632,15 @@ PlayerTracker.prototype.onEatBooster = function (booster) {
     }
 };
 
+PlayerTracker.prototype.onPlayerCellRemove = function (cell) {
+    if (this.cells.length == 0 && cell.cellType == CellType.PLAYER_CELL) {
+        this.deleteBoosters();
+    }
+};
+
+PlayerTracker.prototype.deleteBoosters = function () {
+    this.activeBoosters = {};
+}
 
 PlayerTracker.prototype.updateBoosters = function (gameServer) {
     for (var i = 0; i < gameServer.clients.length; i++) {
@@ -645,7 +654,7 @@ PlayerTracker.prototype.updateBoosters = function (gameServer) {
         for (var key in player.activeBoosters) {
             var item = player.activeBoosters[key];
             item.timeLeft--;
-            if (item.timeLeft < 0) {
+            if (item.timeLeft <= 0) {
                 delete player.activeBoosters[key];
             }
         }
