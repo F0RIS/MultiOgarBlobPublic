@@ -765,7 +765,7 @@ GameServer.prototype.spawnVirus = function () {
 
 GameServer.prototype.updateBoosters = function () {
     var maxCount = this.config.speedBoosterMinAmount - this.currentSpeedBoosters;
-    var spawnCount = 1;// Math.min(maxCount, 2);
+    var spawnCount = Math.min(maxCount, 1);
     for (var i = 0; i < spawnCount; i++) {
         this.spawnBoosters();
     }
