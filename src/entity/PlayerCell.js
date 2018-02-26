@@ -3,7 +3,7 @@ var CellType = require("../enum/CellTypeEnum");
 
 function PlayerCell() {
     Cell.apply(this, Array.prototype.slice.call(arguments));
-    
+
     this.cellType = CellType.PLAYER_CELL;
     this._canRemerge = false;
 }
@@ -21,6 +21,7 @@ PlayerCell.prototype.updateRemerge = function () {
         return;
     }
     var baseTtr = this.gameServer.config.playerRecombineTime;        // default baseTtr = 30
+    // baseTtr = this.applyMergeBooster(baseTtr);
     if (baseTtr == 0) {
         // instant merge
         if (this.getSize() >= 780 / 2) {
@@ -32,8 +33,20 @@ PlayerCell.prototype.updateRemerge = function () {
     }
     var ttr = Math.max(baseTtr, (this.getSize() * 0.2) >> 0);   // ttr in seconds
     // seconds to ticks (tickStep = 0.040 sec => 1 / 0.040 = 25)
+    
     ttr *= 25;
+    ttr = this.applyMergeBooster(ttr);
     this._canRemerge = age >= ttr;
+}
+
+PlayerCell.prototype.applyMergeBooster = function (value) {
+    if (this.owner){
+        var booster = this.owner.activeBoosters[CellType.MERGE_BOOSTER];
+        if (booster) {
+            value *= booster.value;
+        }
+    }
+    return value;
 }
 
 PlayerCell.prototype.canRemerge = function () {
@@ -66,20 +79,20 @@ PlayerCell.prototype.moveUser = function (border) {
     var dy = ~~(y - this.position.y);
     var squared = dx * dx + dy * dy;
     if (squared < 1) return;
-    
+
     // distance
     var d = Math.sqrt(squared);
-    
+
     // normal
     var invd = 1 / d;
     var nx = dx * invd;
     var ny = dy * invd;
-    
+
     // normalized distance (0..1)
     d = Math.min(d, 32) / 32;
     var speed = this.getSpeed() * d;
     if (speed <= 0) return;
-    
+
     this.position.x += nx * speed;
     this.position.y += ny * speed;
     this.checkBorder(border);
@@ -103,7 +116,7 @@ PlayerCell.prototype.onRemove = function (gameServer) {
     gameServer.gameMode.onCellRemove(this);
 
     //PlayerTracker action
-    if (this.owner){
+    if (this.owner) {
         this.owner.onPlayerCellRemove(this);
     }
 };

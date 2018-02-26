@@ -151,7 +151,7 @@ Cell.prototype.canEat = function (cell) {
 Cell.prototype.onEat = function (prey) {
     // Called to eat prey cell
     // this.setSize(Math.sqrt(this.getSizeSquared() + prey.getSizeSquared()));
-    if (prey.cellType < CellType.SPEED_BOOSTER) {
+    if (prey.cellType < CellType.BOOSTERS_ID_START) {
         this.setSize(Math.sqrt(this.getSizeSquared() + prey.getSizeSquared()));
     }
 };
@@ -161,7 +161,7 @@ Cell.prototype.onEaten = function (hunter) {
         if (this.cellType == CellType.FOOD) {
             // hunter.owner.onEatFood(this);
         }
-        if (this.cellType == CellType.SPEED_BOOSTER) {
+        if (this.cellType >= CellType.BOOSTERS_ID_START) {
             hunter.owner.onEatBooster(this);
         }
     }

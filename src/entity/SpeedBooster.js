@@ -18,9 +18,11 @@ SpeedBooster.prototype = new Cell();
 // Main Functions
 
 SpeedBooster.prototype.onAdd = function (gameServer) {
-    gameServer.currentSpeedBoosters++;
+    // gameServer.currentSpeedBoosters++;
+    gameServer.boostersCount[this.cellType]++;
 };
 
 SpeedBooster.prototype.onRemove = function (gameServer) {
-    gameServer.currentSpeedBoosters--;
+    // gameServer.currentSpeedBoosters--;
+    gameServer.boostersCount[this.cellType]--;
 };

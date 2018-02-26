@@ -6,4 +6,5 @@
     MotherCell: require('./MotherCell'),
     EjectedMass: require('./EjectedMass'),
     SpeedBooster: require('./SpeedBooster'),
+    MergeBooster: require('./MergeBooster'),
 };

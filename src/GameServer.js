@@ -18,6 +18,7 @@ var Gamemode = require('./gamemodes');
 var BotLoader = require('./ai/BotLoader');
 var Logger = require('./modules/Logger');
 var UserRoleEnum = require('./enum/UserRoleEnum');
+var CellType = require("./enum/CellTypeEnum");
 
 // GameServer implementation
 function GameServer() {
@@ -37,7 +38,10 @@ function GameServer() {
     this.quadTree = null;
 
     this.currentFood = 0;
-    this.currentSpeedBoosters = 0;
+    this.boostersCount = {
+        // <cell type>: count
+    }
+
     this.movingNodes = []; // For move engine
     this.leaderboard = [];
     this.leaderboardType = -1; // no type
@@ -132,12 +136,21 @@ function GameServer() {
         tourneyAutoFill: 0,         // If set to a value higher than 0, the tournament match will automatically fill up with bots after this amount of seconds
         tourneyAutoFillPlayers: 1,  // The timer for filling the server with bots will not count down unless there is this amount of real players
 
-        //Boosters
+        //BOOSTERS
+
+        //Speed
         speedBoosterTime: 15,       //how much time it will works
         speedBoosterValue: 1.45,    // multiplyer to increase speed
         speedBoosterSize: 141,      //mass = 200
-        speedBoosterMinAmount: 20,
-        speedBoosterMaxAmount: 50
+        speedBoosterMinAmount: 0,
+        speedBoosterMaxAmount: 5,
+
+        //Merge
+        mergeBoosterTime: 5,       //how much time it will works
+        mergeBoosterValue: 0,      // % to speed up recombine (0.5 = 50% faster, 1.5 = 50% slower)
+        mergeBoosterSize: 100,     //mass = 200
+        mergeBoosterMinAmount: 0,
+        mergeBoosterMaxAmount: 1
     };
 
     this.ipBanList = [];
@@ -688,6 +701,9 @@ GameServer.prototype.mainLoop = function () {
             this.updateFood();  // Spawn food
             this.updateVirus(); // Spawn viruses
             this.updateBoosters(); //Spawn boosters
+
+            //TODO generalize this
+            this.updateBoosters2(); //Spawn boosters
         }
         this.gameMode.onTick(this);
         if (((this.getTick() + 3) % (1000 / 40)) == 0) {
@@ -764,7 +780,10 @@ GameServer.prototype.spawnVirus = function () {
 };
 
 GameServer.prototype.updateBoosters = function () {
-    var maxCount = this.config.speedBoosterMinAmount - this.currentSpeedBoosters;
+    if (!this.boostersCount[CellType.SPEED_BOOSTER]) {
+        this.boostersCount[CellType.SPEED_BOOSTER] = 0;
+    }
+    var maxCount = this.config.speedBoosterMinAmount - this.boostersCount[CellType.SPEED_BOOSTER];
     var spawnCount = Math.min(maxCount, 1);
     for (var i = 0; i < spawnCount; i++) {
         this.spawnBoosters();
@@ -779,6 +798,28 @@ GameServer.prototype.spawnBoosters = function () {
         return;
     }
     var v = new Entity.SpeedBooster(this, null, pos, this.config.speedBoosterSize);
+    this.addNode(v);
+};
+
+GameServer.prototype.updateBoosters2 = function () {
+    if (!this.boostersCount[CellType.MERGE_BOOSTER]) {
+        this.boostersCount[CellType.MERGE_BOOSTER] = 0;
+    }
+    var maxCount = this.config.mergeBoosterMinAmount - this.boostersCount[CellType.MERGE_BOOSTER];
+    var spawnCount = Math.min(maxCount, 1);
+    for (var i = 0; i < spawnCount; i++) {
+        this.spawnBoosters2();
+    }
+};
+
+GameServer.prototype.spawnBoosters2 = function () {
+    // Spawns a virus
+    var pos = this.getRandomPosition();
+    if (this.willCollide(pos, this.config.mergeBoosterSize)) {
+        // cannot find safe position => do not spawn
+        return;
+    }
+    var v = new Entity.MergeBooster(this, null, pos, this.config.mergeBoosterSize);
     this.addNode(v);
 };
 
