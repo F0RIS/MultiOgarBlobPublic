@@ -9,7 +9,7 @@ function MergeBooster() {
     this.effectValue  = this.gameServer.config.mergeBoosterValue;
     this.effectTime = this.gameServer.config.mergeBoosterTime; 
 
-    this.setColor({ r: 99, g: 179, b: 228 });
+    this.setColor({ r: 0, g: 145, b: 121 });
 }
 
 module.exports = MergeBooster;
