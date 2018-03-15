@@ -9,11 +9,16 @@ or issue command addBots [number] in console.
 - Added some russian badwords
 - Bots have YT skins
 
+(1/10/18)
+- Server updated to 1.2.69.1
+
 (12/11/17)
 - Added mod commands(kick, kill, ban, mute)
+- Edited login system
 
 (11/11/17)
 - Experimental can eat virus(fix)
+- Added Blob Server support
 
 (3/28/16)
 - Bots now have intelligent pathfinding - will ignore viruses in most cases
