@@ -4,6 +4,11 @@ To install this module, set the serverBots config field in gameserver.js to an a
 or issue command addBots [number] in console.
 
 [Changelog]
+
+(3/14/18)
+- Added some russian badwords
+- Bots have YT skins
+
 (3/28/16)
 - Bots now have intelligent pathfinding - will ignore viruses in most cases
 - Bot updating is now async and happens every 50ms
