@@ -9,6 +9,9 @@ or issue command addBots [number] in console.
 - Added some russian badwords
 - Bots have YT skins
 
+(1/15/18)
+- Added mod commands(kick, kill, ban, mute)
+
 (3/28/16)
 - Bots now have intelligent pathfinding - will ignore viruses in most cases
 - Bot updating is now async and happens every 50ms
