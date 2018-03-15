@@ -9,8 +9,11 @@ or issue command addBots [number] in console.
 - Added some russian badwords
 - Bots have YT skins
 
-(1/15/18)
+(12/11/17)
 - Added mod commands(kick, kill, ban, mute)
+
+(11/11/17)
+- Experimental can eat virus(fix)
 
 (3/28/16)
 - Bots now have intelligent pathfinding - will ignore viruses in most cases
