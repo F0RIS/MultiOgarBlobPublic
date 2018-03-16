@@ -55,7 +55,7 @@ PlayerCommand.prototype.executeCommandLine = function (commandLine) {
 var playerCommands = {
     help: function (args) {
 
-        this.writeLine("\nAvailable commands:\n/kill - self kill\n/clear - clear chat\n/mute - mute chat\n/unmute - unmute chat\n/info - get info about server\n/share - share this server ip\n/pl - playerlist\n/help - this commands list");
+        this.writeLine("\nAvailable commands:\n/rules - show rules list\n/kill - self kill\n/clear - clear chat\n/mute - mute chat\n/unmute - unmute chat\n/info - get info about server\n/share - share this server ip\n/pl - playerlist\n/help - this commands list");
 
     },
     info: function (args) {
@@ -68,7 +68,11 @@ var playerCommands = {
             "\nUptime (m): " + stats.uptime +
             "\nUpdate_time: " + stats.update_time);
     },
-	/*
+//	rules: function (args) {
+//
+// Антон, добавишь код для правил
+//    },
+/*
 	color: function (args){
 		var arr = args.trim().split(" ");
 		if (this.playerTracker.cells.length > 0) {
