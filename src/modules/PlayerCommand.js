@@ -77,7 +77,11 @@ var playerCommands = {
             "\nUptime (m): " + stats.uptime +
             "\nUpdate_time: " + stats.update_time);
     },
-	/*
+//	rules: function (args) {
+//
+// Антон, добавишь код для правил
+//    },
+/*
 	color: function (args){
 		var arr = args.trim().split(" ");
 		if (this.playerTracker.cells.length > 0) {

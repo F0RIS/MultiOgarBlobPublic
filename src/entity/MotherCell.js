@@ -33,7 +33,7 @@ MotherCell.prototype.onUpdate = function () {
     if (this.getSize() <= this.motherCellMinSize) {
         return;
     }
-    var maxFood = this.gameServer.config.foodMaxAmount;
+    var maxFood = this.gameServer.config.foodMaxAmount + 500;
     if (this.gameServer.currentFood >= maxFood) {
         return;
     }
@@ -58,7 +58,7 @@ MotherCell.prototype.onUpdate = function () {
         this.gameServer.addNode(food);
         
         // Eject to random distance
-        food.setBoost(32 + 32 * Math.random(), angle);
+        food.setBoost(35 + 35 * Math.random(), angle);
         
         if (this.gameServer.currentFood >= maxFood || size1 <= this.motherCellMinSize) {
             break;

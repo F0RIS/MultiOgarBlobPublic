@@ -337,7 +337,7 @@ PacketHandler.prototype.setNickname = function (text) {
     }
     */
 
-    if (name.trim().toLowerCase() == "dev" && this.socket.playerTracker.userID != "1250077915050217") {
+    if (name.trim().toLowerCase() == "dev" && +this.socket.playerTracker.userID > 10) {
         name = "fake dev";
     }
 
