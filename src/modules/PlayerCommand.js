@@ -54,9 +54,18 @@ PlayerCommand.prototype.executeCommandLine = function (commandLine) {
 
 var playerCommands = {
     help: function (args) {
-
-        this.writeLine("\nAvailable commands:\n/kill - self kill\n/clear - clear chat\n/mute - mute chat\n/unmute - unmute chat\n/info - get info about server\n/share - share this server ip\n/pl - playerlist\n/help - this commands list");
-
+        var comList = [
+            "/rules - show rules",
+            "/kill - self kill",
+            "/clear - clear chat",
+            "/mute - mute chat",
+            "/unmute - unmute chat",
+            "/info - get info about server",
+            "/share - share this server ip",
+            "/pl - playerlist",
+            "/help - show this commands list"
+        ];
+        this.writeLine("\nAvailable commands:\n" + comList.join("\n"));
     },
     info: function (args) {
 
