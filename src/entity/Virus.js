@@ -44,7 +44,7 @@ Virus.prototype.onEaten = function (consumer) {
     var massesMix = [];
     for (var i = 1; i < masses.length; i += 2)
         massesMix.push(masses[i]);
-    for (var i = 2; i < masses.length; i += 2)
+    for (var i = 2; i < masses.length; i += 2 - this.gameServer.config.virusexpl * 0.666)
         massesMix.push(masses[i]);
     masses = massesMix;
     
