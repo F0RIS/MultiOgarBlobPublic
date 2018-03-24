@@ -50,7 +50,7 @@ Virus.prototype.onEaten = function (consumer) {
     
     // Blow up the cell...
     var angle = 2 * Math.PI * Math.random();
-    var step = 2 * Math.PI / masses.length;
+    var step = this.gameServer.config.virusexpl + 2 * Math.PI / masses.length;
     for (var i = 0; i < masses.length; i++) {
         if (!this.gameServer.splitPlayerCell(client, consumer, angle, masses[i])) {
             break;
