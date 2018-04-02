@@ -8,6 +8,7 @@ function ChatMessage(sender, message, player) {
     this.message = message;
     this.sendUserID = player.sendUserID;
     this.sendPlayerID = player.userRole > UserRoleEnum.USER;
+    this.newFormat = player.minimapIDs;
 }
 
 module.exports = ChatMessage;
@@ -55,6 +56,8 @@ ChatMessage.prototype.build = function (protocol) {
     if (this.sender && this.sender.showChatSuffix) {
         flags |= 0x02;
     }
+
+    // Free flag - 0x01
     
     writer.writeUInt8(flags);
     writer.writeUInt8(color.r >> 0);
@@ -62,7 +65,11 @@ ChatMessage.prototype.build = function (protocol) {
     writer.writeUInt8(color.b >> 0);
 
     if (this.sendUserID && this.sender && this.sender.userID != 0){
-        writer.writeDouble(this.sender.userID);
+        if (this.newFormat) {
+            writer.writeInt32(this.sender.userID);
+        } else {
+            writer.writeDouble(this.sender.userID);
+        }
     }
     
     if (this.sender && this.sendPlayerID) { //sending player ID to moderators

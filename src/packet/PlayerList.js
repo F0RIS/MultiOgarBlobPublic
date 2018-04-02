@@ -19,7 +19,8 @@ PlayerList.prototype.build = function (protocol) {
     for (var i = 0; i < this.data.length; i++) {
         var item = this.data[i];
         writer.writeUInt32(item.id);
-        writer.writeDouble(item.s_id);
+        // writer.writeDouble(item.s_id);
+        writer.writeUInt32(item.s_id);
         writer.writeStringZeroUnicode(item.nick);
         writer.writeUInt32(item.score);
     }

@@ -15,6 +15,11 @@ function PlayerTracker(gameServer, socket) {
     this.userID = 0;
     this.startingSize = gameServer ? gameServer.config.playerStartSize : 0;
     
+
+    //meanin that client can handle pIDs in minimap. 
+    //Also with this flag was migration from long to int user social ID
+    this.minimapIDs = false; 
+
     this.userRole = UserRoleEnum.GUEST;
     this.showChatSuffix = false;
     this.userAuth = null;
@@ -599,3 +604,8 @@ PlayerTracker.prototype.sendCameraPacket = function () {
         this.getScale()
     ));
 };
+
+PlayerTracker.prototype.isValidForMiniMapPIDs = function () {
+    //don't send additional data for old clients
+    return (this.clientVersion >= 154 || /*iOS versions*/(this.clientVersion >= 4 && this.clientVersion < 100));
+}

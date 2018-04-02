@@ -6,6 +6,7 @@ function UpdateLeaderboard(playerTracker, leaderboard, leaderboardType) {
     this.playerTracker = playerTracker;
     this.leaderboard = leaderboard;
     this.leaderboardType = leaderboardType;
+    this.newFormat = playerTracker.minimapIDs;
 }
 
 module.exports = UpdateLeaderboard;
@@ -48,7 +49,11 @@ UpdateLeaderboard.prototype.buildUserText = function (protocol) {
             writer.writeStringZeroUtf8(name);
 
         if (this.playerTracker.clientVersion >= 96) {
-            writer.writeDouble(0);
+            if (this.newFormat) {
+                writer.writeInt32(0);
+            } else {
+                writer.writeDouble(0);
+            }
         }
     }
     return writer.toBuffer();
@@ -80,7 +85,11 @@ UpdateLeaderboard.prototype.buildFfa5 = function () {
             writer.writeUInt16(0);
 
         if (this.playerTracker.clientVersion >= 96) {
-            writer.writeDouble(item.userID ? item.userID : 0);
+            if (this.newFormat) {
+                writer.writeInt32(item.userID ? item.userID : 0);
+            } else {
+                writer.writeDouble(item.userID ? item.userID : 0);
+            }
         }
     }
     return writer.toBuffer();

@@ -137,43 +137,43 @@ PacketHandler.prototype.message_onSpectate = function (message) {
 
 PacketHandler.prototype.message_setParams = function (message) {
     
+    var player = this.socket.playerTracker;
     var reader = new BinaryReader(message);
     reader.skipBytes(1);
-    
+
     var joined = true;
-    if (this.socket.playerTracker.clientVersion != 0) {
+    if (player.clientVersion != 0) {
         joined = false;
     }
-    
-    this.socket.playerTracker.clientVersion = reader.readInt32();
+
+    player.clientVersion = reader.readInt32();
     var flags = reader.readUInt32();
-    
-    if ((flags & 1) != 0){
-        this.socket.playerTracker.sendOwner = true;
+
+    if ((flags & 1) != 0) {
+        player.sendOwner = true;
     }
-    if ((flags & 2) != 0){
-        this.socket.playerTracker.showChatSuffix = true;
+    if ((flags & 2) != 0) {
+        player.showChatSuffix = true;
     }
-    
+
     var fbID = reader.readDouble();
-    this.socket.playerTracker.userID = fbID
-    if (this.socket.playerTracker.userID != 0) {
-        this.socket.playerTracker.sendUserID = true; // fb id in chat, minimap
+    player.userID = fbID
+    if (player.userID != 0) {
+        player.sendUserID = true; // fb id in chat, minimap
     }
 
     var startingMass = reader.readUInt32();
-    this.socket.playerTracker.startingSize = parseInt(Math.sqrt(startingMass* 100));
-    
+    player.startingSize = parseInt(Math.sqrt(startingMass * 100));
+
     try {
         var roleId = reader.readUInt8();
-        this.socket.playerTracker.userRole = roleId;
+        player.userRole = roleId;
+        player.deviceID = reader.readInt32();
+    } catch (e) { };
 
-        this.socket.playerTracker.deviceID = reader.readInt32();
-    } catch(e){};
-    
-    // RestrictionManager.processRestrictions(this.socket.playerTracker);
-    
-    console.log((joined ? "Joined " : "SetParams ") + this.socket.playerTracker.userID + " sm: " + startingMass + " cl_ver: " + this.socket.playerTracker.clientVersion);
+    player.minimapIDs = player.isValidForMiniMapPIDs(); // whether send player ID in UpdateMinimap packet
+
+    console.log((joined ? "Joined " : "SetParams ") + player.userID + " sm: " + startingMass + " cl_ver: " + player.clientVersion);
 };
 
 PacketHandler.prototype.message_onMouse = function (message) {
