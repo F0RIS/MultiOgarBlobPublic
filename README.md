@@ -65,12 +65,12 @@ node index.js
 node index.js -m <number>
 ```
 Where number is 
-1 - Teams,
-2 - Experimental,
-3 - InstantMerge,
-4 - OldCrazy
-5 - SelfFeed
-6 - Ultra
+* 1 - Teams
+* 2 - Experimental
+* 3 - InstantMerge
+* 4 - OldCrazy
+* 5 - SelfFeed
+* 7 - Ultra
 ```
 # For example:
 node index.js -m 3
