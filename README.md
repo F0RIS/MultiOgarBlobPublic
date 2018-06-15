@@ -5,6 +5,10 @@ Current version: **1.2.69.3**
 
 ## Install
 
+You can use this repository via special [Blob server app](https://blobgame.github.io) which don't demand from you to write any command!
+
+But if you want use this repository manually, read info below.
+
 #### Windows:
 * Download and install node.js: https://nodejs.org/en/download/ (64-bit recommended)
 * Download this repository as zip to your PC
