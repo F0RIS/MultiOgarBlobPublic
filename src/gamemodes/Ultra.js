@@ -10,7 +10,7 @@ function Ultra() {
     this.name = "ULTRA";
     this.specByLeaderboard = true;
 
-    this.restartInterval = gameServer.config.UltraRestartCounter * 100; // 10 sec
+    this.restartInterval = gameServer.config.ultraRestartCounterDuration * 1000; // 10 sec
     this.downCounter = this.restartInterval / 1000; // counter to show on leaderboard
 
     this.canRemergeLimit = 200;
@@ -18,7 +18,7 @@ function Ultra() {
 
 
     // if some player reach this limit, restart timer will be started
-    this.scoreLimit = gameServer.config.UltraMassRestart;
+    this.scoreLimit = gameServer.config.ultraRestartMassLimit;
     this.restarting = false;
 
 }
