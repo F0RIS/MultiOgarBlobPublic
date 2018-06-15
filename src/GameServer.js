@@ -1328,7 +1328,7 @@ GameServer.prototype.splitPlayerCell = function (client, parent, angle, mass) {
     
     // Create cell
     var newCell = new Entity.PlayerCell(this, client, pos, size2);
-    newCell.setBoost(780, angle);
+    newCell.setBoost(newCell.boostValue, angle);
     
     // Add to node list
     this.addNode(newCell);

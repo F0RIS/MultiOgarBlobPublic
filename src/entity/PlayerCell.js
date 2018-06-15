@@ -5,6 +5,21 @@ function PlayerCell() {
     
     this.cellType = 0;
     this._canRemerge = false;
+
+     //default value
+    this._canRemergeLimit = 100;
+    this.boostValue = 870;
+
+    var gameMode = this.gameServer.gameMode;
+    
+    //ultra values
+    if (gameMode.canRemergeLimit){
+        this._canRemergeLimit = gameMode.canRemergeLimit;
+}
+
+    if (gameMode.newPlayerCellBoostValue){
+        this.boostValue = gameMode.newPlayerCellBoostValue;
+    } 
 }
 
 module.exports = PlayerCell;

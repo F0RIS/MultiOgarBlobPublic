@@ -6,6 +6,7 @@
     InstantMerge: require('./InstantMerge'),
     Crazy: require('./Crazy'),
     SelfFeed: require('./SelfFeed'),
+    Ultra: require('./Ultra'),
     Tournament: require('./Tournament'),
     HungerGames: require('./HungerGames'),
     Rainbow: require('./Rainbow'),
@@ -31,6 +32,9 @@ var get = function (id) {
             break;
         case 5:// SelfFeed
             mode = new module.exports.SelfFeed();
+            break;
+        case 7:
+            mode = new module.exports.Ultra();
             break;
         case 10:// Tournament
             mode = new module.exports.Tournament();
