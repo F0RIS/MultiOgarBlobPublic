@@ -66,6 +66,7 @@ Where number is
 3 - InstantMerge,
 4 - OldCrazy
 5 - SelfFeed
+7 - Ultra
 ```
 # For example:
 node index.js -m 3
