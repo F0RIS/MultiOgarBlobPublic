@@ -33,7 +33,7 @@ var get = function (id) {
         case 5:// SelfFeed
             mode = new module.exports.SelfFeed();
             break;
-        case 7:
+        case 6:
             mode = new module.exports.Ultra();
             break;
         case 10:// Tournament
