@@ -123,7 +123,8 @@ function GameServer() {
         playerRecombineTime: 30,    // Base time in seconds before a cell is allowed to recombine
         playerMaxNickLength: 15,    // Maximum nick length
         playerDisconnectTime: 60,   // The time in seconds it takes for a player cell to be removed after disconnection (If set to -1, cells are never removed)
-        
+        EasyPopsplit: 0,
+	
         tourneyMaxPlayers: 12,      // Maximum number of participants for tournament style game modes
         tourneyPrepTime: 10,        // Number of ticks to wait after all players are ready (1 tick = 1000 ms)
         tourneyEndTime: 30,         // Number of ticks to wait after a player wins (1 tick = 1000 ms)
