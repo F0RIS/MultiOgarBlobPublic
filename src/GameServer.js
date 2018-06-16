@@ -123,7 +123,7 @@ function GameServer() {
         playerRecombineTime: 30,    // Base time in seconds before a cell is allowed to recombine
         playerMaxNickLength: 15,    // Maximum nick length
         playerDisconnectTime: 60,   // The time in seconds it takes for a player cell to be removed after disconnection (If set to -1, cells are never removed)
-	playerProtection: 0,
+	//playerProtection: 0,
         
         tourneyMaxPlayers: 12,      // Maximum number of participants for tournament style game modes
         tourneyPrepTime: 10,        // Number of ticks to wait after all players are ready (1 tick = 1000 ms)
@@ -131,8 +131,8 @@ function GameServer() {
         tourneyTimeLimit: 20,       // Time limit of the game, in minutes.
         tourneyAutoFill: 0,         // If set to a value higher than 0, the tournament match will automatically fill up with bots after this amount of seconds
         tourneyAutoFillPlayers: 1,  // The timer for filling the server with bots will not count down unless there is this amount of real players
-   	ultraRestartMassLimit: 250000,
-	ultraRestartCounterDuration: 10,
+        ultraRestartMassLimit: 250000,
+        ultraRestartCounterDuration: 10,
     };
     
     this.ipBanList = [];
