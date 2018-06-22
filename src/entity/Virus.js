@@ -44,13 +44,13 @@ Virus.prototype.onEaten = function (consumer) {
     var massesMix = [];
     for (var i = 1; i < masses.length; i += 2)
         massesMix.push(masses[i]);
-    for (var i = 2; i < masses.length; i += 2 - (this.gameServer.config.EasyPopsplit * 0.6))
+    for (var i = 2; i < masses.length; i += 2 - (this.gameServer.config.easyPopsplit * 0.6))
         massesMix.push(masses[i]);
     masses = massesMix;
     
     // Blow up the cell...
     var angle = 2 * Math.PI * Math.random();
-    var step = 2 - (this.gameServer.config.EasyPopsplit * 0.6) * Math.PI / masses.length;
+    var step = 2 - (this.gameServer.config.easyPopsplit * 0.6) * Math.PI / masses.length;
     for (var i = 0; i < masses.length; i++) {
         if (!this.gameServer.splitPlayerCell(client, consumer, angle, masses[i])) {
             break;
