@@ -10,7 +10,7 @@ function Ultra() {
     this.name = "ULTRA";
     this.specByLeaderboard = true;
 
-    this.restartInterval = gameServer.config.ultraRestartCounterDuration * 1000; // 10 sec
+    // this.restartInterval = 10000;
     this.downCounter = this.restartInterval / 1000; // counter to show on leaderboard
 
     this.canRemergeLimit = 200;
@@ -18,7 +18,7 @@ function Ultra() {
 
 
     // if some player reach this limit, restart timer will be started
-    this.scoreLimit = gameServer.config.ultraRestartMassLimit;
+    // this.scoreLimit = 25000;
     this.restarting = false;
 
 }
@@ -63,6 +63,11 @@ Ultra.prototype.onServerInit = function (gameServer) {
     gameServer.config.ejectSpawnPlayer = 0
 
     gameServer.config.playerProtection = 0;
+
+    this.restartInterval = gameServer.config.ultraRestartCounterDuration * 1000; // 10 sec
+    this.downCounter = this.restartInterval / 1000; // counter to show on leaderboard
+
+    this.scoreLimit = gameServer.config.ultraRestartMassLimit;
 };
 
 Ultra.prototype.startRestartTimer = function (gameServer) {
@@ -107,7 +112,7 @@ Ultra.prototype.updateLB = function (gameServer) {
     if (this.restarting) {
         var lb = gameServer.leaderboard;
         lb.length = 0; //hide nicknames
-        var timeLeftLabel = "Restart in: " + this.downCounter-- + "sec";
+        var timeLeftLabel = "Restart in: " + this.downCounter-- + "s";
         lb.push(mockPlayer(timeLeftLabel));
     }
 }
