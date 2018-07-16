@@ -18,6 +18,7 @@ var Gamemode = require('./gamemodes');
 var BotLoader = require('./ai/BotLoader');
 var Logger = require('./modules/Logger');
 var UserRoleEnum = require('./enum/UserRoleEnum');
+var config = require("./config");
 
 // GameServer implementation
 function GameServer() {
@@ -1833,7 +1834,6 @@ GameServer.prototype.getStats = function () {
 // To list us on the server tracker located at http://ogar.mivabe.nl/master
 // Should be called every 30 seconds
 GameServer.prototype.pingServerTracker = function () {
-    return;
     // Get server statistics
     var totalPlayers = 0;
     var alivePlayers = 0;
@@ -1854,15 +1854,16 @@ GameServer.prototype.pingServerTracker = function () {
                 spectatePlayers++;
         }
     }
-    
+
     // Send Ping...
-    
+
     // ogar-tracker.tk
     var obj = {
         gamePort: this.config.serverPort,               // [mandatory] web socket port which listens for game client connections
-		statsPort: this.config.serverStatsPort,
+        statsPort: this.config.serverStatsPort,
         name: this.config.serverName,               // [mandatory] server name
         mode: this.gameMode.name,                   // [mandatory] game mode
+        mode_api_id: this.gameMode.apiId,           // [mandatory] game mode api id
         total: totalPlayers,                        // [mandatory] total online players (server bots is not included!)
         alive: alivePlayers,                        // [mandatory] alive players (server bots is not included!)
         spect: spectatePlayers,                     // [mandatory] spectate players (server bots is not included!)
@@ -1875,39 +1876,16 @@ GameServer.prototype.pingServerTracker = function () {
         version: 'MultiOgar ' + pjson.version,      // [optional]  server version
         stpavg: this.updateTimeAvg >>> 0,           // [optional]  average server loop time
         chat: this.config.serverChat ? 1 : 0,       // [optional]  0 - chat disabled, 1 - chat enabled
-        os: os.platform()                           // [optional]  operating system
+        os: os.platform(),                          // [optional]  operating system
+        hoster_key : config.HOSTER_KEY
     };
-	
 
-    // mivabe.nl
-    // Why don't just to use JSON?
-    /*
-	var data = 'current_players=' + totalPlayers +
-               '&alive=' + alivePlayers +
-               '&spectators=' + spectatePlayers +
-               '&max_players=' + this.config.serverMaxConnections +
-               '&sport=' + this.config.serverPort +
-               '&gamemode=[*] ' + this.gameMode.name +  // we add [*] to indicate that this is multi-server
-               '&agario=true' +                         // protocol version
-               '&name=Unnamed Server' +                 // we cannot use it, because other value will be used as dns name
-               '&opp=' + os.platform() + ' ' + os.arch() + // "win32 x64"
-               '&uptime=' + process.uptime() +          // Number of seconds server has been running
-               '&version=MultiOgar ' + pjson.version +
-               '&start_time=' + this.startTime;
     trackerRequest({
-        host: 'ogar.mivabe.nl',
-        port: 80,
-        path: '/master',
-        method: 'POST'
-    }, 'application/x-www-form-urlencoded', data);
-    
-    // c0nsume.me
-    trackerRequest({
-        host: 'c0nsume.me',
-        port: 80,
-        path: '/tracker.php',
-        method: 'POST'
-    }, 'application/x-www-form-urlencoded', data);*/
+        host: config.BALANCER_IP,
+        port: config.BALANCER_PORT,
+        path: '/addCustomServ',
+        method: 'PUT'
+    }, 'application/json', JSON.stringify(obj));
 };
 
 function trackerRequest(options, type, body) {
