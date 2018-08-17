@@ -9,5 +9,7 @@ module.exports = {
 
 
     BALANCER_IP: "f0ris.dlinkddns.com",
+    // BALANCER_IP: "127.0.0.1",
+
     BALANCER_PORT: 80,
 };

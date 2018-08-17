@@ -1880,6 +1880,10 @@ GameServer.prototype.pingServerTracker = function () {
         hoster_key : config.HOSTER_KEY
     };
 
+    if (config.HOSTER_KEY == "YOUR_KEY") {
+        return;
+    }
+
     trackerRequest({
         host: config.BALANCER_IP,
         port: config.BALANCER_PORT,
