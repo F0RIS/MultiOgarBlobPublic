@@ -6,6 +6,7 @@
     this.haveTeams = false; // True = gamemode uses teams, false = gamemode doesnt use teams
     
     this.specByLeaderboard = false; // false = spectate from player list instead of leaderboard
+    this.IsTournament = false;
 }
 
 module.exports = Mode;

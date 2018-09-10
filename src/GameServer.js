@@ -132,6 +132,8 @@ function GameServer() {
         tourneyTimeLimit: 20,       // Time limit of the game, in minutes.
         tourneyAutoFill: 0,         // If set to a value higher than 0, the tournament match will automatically fill up with bots after this amount of seconds
         tourneyAutoFillPlayers: 1,  // The timer for filling the server with bots will not count down unless there is this amount of real players
+        tourneyLeaderboardToggleTime: 5, //Time for toggling the leaderboard, in seconds.If value set to 0, leaderboard will not toggle.
+
         ultraRestartMassLimit: 250000,
         ultraRestartCounterDuration: 10,
     };
@@ -341,6 +343,14 @@ GameServer.prototype.onClientSocketClose = function (ws, code) {
     ws.playerTracker.cells.forEach(function (cell) {
         cell.setColor(color);
     }, this);
+
+    if (this.gameMode && this.gameMode.IsTournament == true) {
+        var name = ws.playerTracker.getName();
+        if (name.length > 0) {
+            this.sendChatMessage(null, null, name + " left the game");
+            ///////TODO process leavers
+        }
+    }
 };
 
 GameServer.prototype.onClientSocketError = function (ws, error) {
@@ -690,6 +700,10 @@ GameServer.prototype.mainLoop = function () {
             this.updateMassDecay();
         }
     }
+    //to fix lag when tournament stucks at start
+    if (!this.run && this.gameMode.IsTournament) {
+        this.tickCounter++;
+    }
     
     this.updateClients();
     
@@ -787,6 +801,10 @@ GameServer.prototype.spawnPlayer = function (player, pos, size) {
     if (size == null) {
         // Get starting mass
         size = Math.max(player.startingSize ? player.startingSize: this.config.playerStartSize, this.config.playerStartSize);
+    }
+
+    if (player.spawnmass) { // for changing spawn mass during game
+        size = player.spawnmass;
     }
 
     // player.socket.playerCommand.executeCommandLine("mod_mute 1 1");

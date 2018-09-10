@@ -50,4 +50,5 @@ UpdateMinimap.prototype.build = function (protocol) {
     }
 
     return writer.toBuffer();
+
 }

@@ -9,11 +9,17 @@
     Ultra: require('./Ultra'),
     Tournament: require('./Tournament'),
     HungerGames: require('./HungerGames'),
+    // TS2v2: require('./TS2v2'),
     Rainbow: require('./Rainbow'),
     Zombie: require('./Zombie'),
     TeamZ: require('./TeamZ.js'),
     TeamX: require('./TeamX.js')
 };
+
+var fs = require('fs');
+if (fs.existsSync(__dirname + "\\TS2v2.js")) {
+    module.exports.TS2v2 = require('./TS2v2');
+}
 
 var get = function (id) {
     var mode;
@@ -35,6 +41,9 @@ var get = function (id) {
             break;
         case 6:
             mode = new module.exports.Ultra();
+            break;
+        case 7:
+            mode = new module.exports.TS2v2();
             break;
         case 10:// Tournament
             mode = new module.exports.Tournament();

@@ -14,6 +14,7 @@
         {
             "type": "node",
             "request": "launch",
+            "console": "integratedTerminal",
             "name": "Запустить программу",
             "program": "${workspaceRoot}/src/index.js"
         }
