@@ -10,6 +10,7 @@
     Tournament: require('./Tournament'),
     HungerGames: require('./HungerGames'),
     // TS2v2: require('./TS2v2'),
+    // BattleRoyal: require('./BattleRoyal'),
     Rainbow: require('./Rainbow'),
     Zombie: require('./Zombie'),
     TeamZ: require('./TeamZ.js'),
