@@ -17,7 +17,7 @@
 };
 
 var fs = require('fs');
-if (fs.existsSync(__dirname + "\\TS2v2.js")) {
+if (fs.existsSync(__dirname + "//TS2v2.js")) {
     module.exports.TS2v2 = require('./TS2v2');
 }
 
