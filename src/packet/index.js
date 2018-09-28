@@ -11,7 +11,8 @@
     UpdateNodes: require('./UpdateNodes'),
     UpdateLeaderboard: require('./UpdateLeaderboard'),
     UpdateMinimap: require('./UpdateMinimap'),
+    UpdateRedArea: require('./UpdateRedArea'),
     DrawLine: require('./DrawLine'),
     SetParams: require('./SetParams'),
-    PlayerList: require('./PlayerList'),    
+    PlayerList: require('./PlayerList'),
 };

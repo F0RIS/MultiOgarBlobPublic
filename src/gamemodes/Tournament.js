@@ -133,8 +133,8 @@ Tournament.prototype.formatTime = function (time) {
         return "0:00";
     }
     // Format
-    var min = Math.floor(this.timeLimit / 60);
-    var sec = this.timeLimit % 60;
+    var min = Math.floor(time / 60);
+    var sec = time % 60;
     sec = (sec > 9) ? sec : "0" + sec.toString();
     return min + ":" + sec;
 };
@@ -175,7 +175,7 @@ Tournament.prototype.onCellRemove = function (cell) {
             }
             if (this.teamPlayers) {
                 var index = this.teamPlayers[owner.team].indexOf(owner);
-                if (index != -1){
+                if (index != -1 && owner.pos){
                     owner.pos.free = true;
                     this.teamPlayers[owner.team].splice(index, 1)
                 }

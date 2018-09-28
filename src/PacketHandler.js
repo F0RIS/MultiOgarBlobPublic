@@ -1,6 +1,7 @@
 ﻿var pjson = require('../package.json');
 var Packet = require('./packet');
 var BinaryReader = require('./packet/BinaryReader');
+var Logger = require('./modules/Logger');
 
 function PacketHandler(gameServer, socket) {
     this.gameServer = gameServer;
@@ -14,7 +15,7 @@ function PacketHandler(gameServer, socket) {
     this.lastWTick = 0;
     this.lastQTick = 0;
     this.lastSpaceTick = 0;
-    
+
     this.pressQ = false;
     this.pressW = false;
     this.pressSpace = false;
@@ -78,7 +79,7 @@ PacketHandler.prototype.handshake_onCompleted = function (protocol, key) {
     this.socket.sendPacket(new Packet.SetBorder(this.socket.playerTracker, this.gameServer.border, this.gameServer.config.serverGamemode, "MultiOgar " + pjson.version));
     this.socket.sendPacket(new Packet.SetParams(this.gameServer));
     // Send welcome message
-    this.gameServer.sendChatMessage(null, this.socket.playerTracker, "MultiOgarBlob private " + pjson.version);
+    //this.gameServer.sendChatMessage(null, this.socket.playerTracker, "MultiOgar " + pjson.version);
     if (this.gameServer.config.serverWelcome1)
         this.gameServer.sendChatMessage(null, this.socket.playerTracker, this.gameServer.config.serverWelcome1);
     if (this.gameServer.config.serverWelcome2)
@@ -136,7 +137,6 @@ PacketHandler.prototype.message_onSpectate = function (message) {
 // };
 
 PacketHandler.prototype.message_setParams = function (message) {
-    
     var player = this.socket.playerTracker;
     var reader = new BinaryReader(message);
     reader.skipBytes(1);
@@ -154,6 +154,9 @@ PacketHandler.prototype.message_setParams = function (message) {
     }
     if ((flags & 2) != 0) {
         player.showChatSuffix = true;
+    }
+    if ((flags & 4) != 0) {
+        player.sendCellType = true;
     }
 
     var fbID = reader.readDouble();
@@ -173,7 +176,8 @@ PacketHandler.prototype.message_setParams = function (message) {
 
     player.minimapIDs = player.isValidForMiniMapPIDs(); // whether send player ID in UpdateMinimap packet
 
-    console.log((joined ? "Joined " : "SetParams ") + player.userID + " sm: " + startingMass + " cl_ver: " + player.clientVersion);
+    var logStr = (joined ? "Joined " : "SetParams ") + player.userID + " sm: " + startingMass + " cl_ver: " + player.clientVersion;
+    Logger.info(logStr)
 };
 
 PacketHandler.prototype.message_onMouse = function (message) {
@@ -185,18 +189,18 @@ PacketHandler.prototype.message_onMouse = function (message) {
 
 PacketHandler.prototype.message_onKeySpace = function (message) {
 
-	if (message.length === 1  || message.length === 2) {
-		var splitCount = message[1];
-		if (splitCount){
-			for (var i = 0; i < splitCount; i++)	{
-				this.socket.playerTracker.pressSpace();
-			}
-		} else{
-			this.socket.playerTracker.pressSpace();
-		}
-	} else {
-		return
-	}
+    if (message.length === 1 || message.length === 2) {
+        var splitCount = message[1];
+        if (splitCount) {
+            for (var i = 0; i < splitCount; i++) {
+                this.socket.playerTracker.pressSpace();
+            }
+        } else {
+            this.socket.playerTracker.pressSpace();
+        }
+    } else {
+        return
+    }
 	/*
     var tick = this.gameServer.getTick();
     var dt = tick - this.lastSpaceTick;
@@ -238,12 +242,12 @@ PacketHandler.prototype.message_onChat = function (message) {
     if (dt < 25 * 2) {
         return;
     }
-    
+
     var flags = message[1];    // flags
-    var rvLength = (flags & 2 ? 4:0) + (flags & 4 ? 8:0) + (flags & 8 ? 16:0);
+    var rvLength = (flags & 2 ? 4 : 0) + (flags & 4 ? 8 : 0) + (flags & 8 ? 16 : 0);
     if (message.length < 3 + rvLength) // second validation
         return;
-    
+
     var reader = new BinaryReader(message);
     reader.skipBytes(2 + rvLength);     // reserved
     var text = null;

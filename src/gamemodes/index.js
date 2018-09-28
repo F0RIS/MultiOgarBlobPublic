@@ -21,6 +21,10 @@ if (fs.existsSync(__dirname + "//TS2v2.js")) {
     module.exports.TS2v2 = require('./TS2v2');
 }
 
+if (fs.existsSync(__dirname + "//BattleRoyal.js")) {
+    module.exports.BattleRoyal = require('./BattleRoyal');
+}
+
 var get = function (id) {
     var mode;
     switch (parseInt(id)) {
@@ -44,6 +48,9 @@ var get = function (id) {
             break;
         case 7:
             mode = new module.exports.TS2v2();
+            break;
+        case 8:
+            mode = new module.exports.BattleRoyal();
             break;
         case 10:// Tournament
             mode = new module.exports.Tournament();
