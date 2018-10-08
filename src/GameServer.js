@@ -344,12 +344,8 @@ GameServer.prototype.onClientSocketClose = function (ws, code) {
         cell.setColor(color);
     }, this);
 
-    if (this.gameMode && this.gameMode.IsTournament) {
-        var name = ws.playerTracker.getName();
-        if (name.length > 0) {
-            this.sendChatMessage(null, null, name + " left the game");
-            ///////TODO process leavers
-        }
+    if (this.gameMode) {
+        this.gameMode.onClientSocketClose(this, ws);
     }
 };
 

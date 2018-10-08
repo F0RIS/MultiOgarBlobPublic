@@ -4,6 +4,7 @@
     ChatMessage: require('./ChatMessage'),
     AddNode: require('./AddNode'),
     ClearAll: require('./ClearAll'),
+    EnableSpectate: require('./EnableSpectate'),
     ClearOwned: require('./ClearOwned'),
     UpdatePosition: require('./UpdatePosition'),
     ServerStat: require('./ServerStat'),

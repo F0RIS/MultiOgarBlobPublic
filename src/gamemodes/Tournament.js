@@ -273,3 +273,10 @@ Tournament.prototype.updateLB = function (gameServer, lb) {
         break;
     }
 };
+
+Tournament.prototype.onClientSocketClose = function (gameServer, socket) {
+    var name = socket.playerTracker.getName();
+    if (name.length > 0) {
+        gameServer.sendChatMessage(null, null, name + " left the game");
+    }
+};
