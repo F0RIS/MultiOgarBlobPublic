@@ -5,7 +5,7 @@ Current version: **1.2.69.4**
 
 ## Install
 
-You can use this repository via special [Blob server app](https://blobgame.github.io) which don't demand from you to write any command!
+You can use this repository via special [Blob server app](https://blobgame.github.io) (Android 5.0+) which don't demand from you to write any command!
 
 But if you want use this repository manually, read info below.
 
