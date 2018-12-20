@@ -49,3 +49,26 @@ BotLoader.prototype.addBot = function () {
     // Add to world
     s.packetHandler.setNickname(this.getName());
 };
+
+BotLoader.prototype.addMinion = function(owner, name) {
+    var MinionPlayer = require('./MinionPlayer');
+    var s = new FakeSocket(this.gameServer);
+    s.playerTracker = new MinionPlayer(this.gameServer, s, owner);
+    s.packetHandler = new PacketHandler(this.gameServer, s);
+    s.playerTracker.owner = owner;
+
+    // Spawn minions at special size
+    var size = 100;
+    if (200 > size)
+        size = Math.random() * (this.gameServer.config.minionMaxStartSize - size) + size;
+    s.playerTracker.spawnmass = size;
+    
+    // Add to client list
+    this.gameServer.clients.push(s);
+
+    // Add to world & set name
+    if (typeof name == "undefined" || name == "") {
+        name = this.gameServer.config.defaultName;
+    }
+    s.packetHandler.setNickname(name);
+};
