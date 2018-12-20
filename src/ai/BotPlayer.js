@@ -77,7 +77,7 @@ BotPlayer.prototype.decide = function (cell) {
             }
             else if (cell._size > (check._size + 4) * 1.15) {
                 // Can eat it
-                influence = check._size * 2.5;
+                 influence = check._size * 2.5;
             }
             else if (check._size + 4 > cell._size * 1.15) {
                 // Can eat me
@@ -136,6 +136,14 @@ BotPlayer.prototype.decide = function (cell) {
         // Produce force vector exerted by this entity on the cell
         var force = displacement.normalize().scale(influence);
         
+        // if (check.cellType == 0 && check.owner._name == "pl4") {
+        //     console.log(this._name);
+        //     console.log(cell._size > (check._size + 4) * 1.15);
+        //     console.log(cell._size < check._size * 5);
+        //     console.log( (!split));
+        //     console.log( this.splitCooldown);
+        //     console.log( this.cells.length);
+        // }
         // Splitting conditions
         if (check.cellType == 0 && 
             cell._size > (check._size + 4) * 1.15 &&
@@ -163,14 +171,15 @@ BotPlayer.prototype.decide = function (cell) {
     if (split) {
         // Can be shortened but I'm too lazy
         if (threats.length > 0) {
-            if (this.largest(threats)._size > cell._size * 1.5) {
+            if (this.largest(threats)._size > cell._size * 1.3) {
                 // Splitkill the target
                 this.mouse = {
                     x: splitTarget.position.x,
                     y: splitTarget.position.y
                 };
                 this.splitCooldown = 16;
-                this.socket.packetHandler.pressSpace = true;
+                // this.socket.packetHandler.pressSpace = true;
+                this.socket.playerTracker.pressSpace();
                 return;
             }
         }
@@ -182,6 +191,7 @@ BotPlayer.prototype.decide = function (cell) {
             };
             this.splitCooldown = 16;
             this.socket.packetHandler.pressSpace = true;
+            this.socket.playerTracker.pressSpace();
             return;
         }
     }
