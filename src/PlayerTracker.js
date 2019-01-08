@@ -74,11 +74,21 @@ function PlayerTracker(gameServer, socket) {
     this.scrambleX = 0;
     this.scrambleY = 0;
     this.scrambleId = 0;
+	this.isMinion = false;
 
     this.connectedTime = 0;
     this.isMinion = false;
     this.spawnCounter = 0;
     this.isMuted = false;
+	
+	// Minions
+    this.miQ = 0;
+    this.isMi = false;
+    this.minionSplit = false;
+    this.minionEject = false;
+    this.minionFrozen = false;
+    this.minionControl = false;
+    this.collectPellets = false;
 
     // Gamemode function
     if (gameServer) {
@@ -319,11 +329,10 @@ PlayerTracker.prototype.updateTick = function () {
     this.updateVisibleNodes();
 };
 
-PlayerTracker.prototype.sendUpdate = function () {
-    if (this.isRemoved ||
-        !this.socket.packetHandler.protocol ||
-        !this.socket.isConnected ||
-        (this.socket._socket.writable != null && !this.socket._socket.writable) ||
+PlayerTracker.prototype.sendUpdate = function() {
+    if (this.isRemoved || !this.socket.packetHandler.protocol ||
+        !this.socket.isConnected || this.isMi || this.isMinion ||
+        (this.socket._socket.writable != null && !this.socket._socket.writable) || 
         this.socket.readyState != this.socket.OPEN) {
         // do not send update for disconnected clients
         // also do not send if initialization is not complete yet

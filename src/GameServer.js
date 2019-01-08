@@ -129,7 +129,17 @@ function GameServer() {
         playerRecombineTime: 30,    // Base time in seconds before a cell is allowed to recombine
         playerMaxNickLength: 15,    // Maximum nick length
         playerDisconnectTime: 60,   // The time in seconds it takes for a player cell to be removed after disconnection (If set to -1, cells are never removed)
-        //playerProtection: 1,        // 
+        //playerProtection: 1,      // 
+
+        minionStartSize: 32,        // Start size of minions (mass = 32*32/100 = 10.24)
+        minionMaxStartSize: 32,     // Maximum value of random start size for minions (set value higher than minionStartSize to enable)
+        minionCollideTeam: 0,       //Determines whether minions colide with their team in the Teams gamemode (0 = OFF, 1 = ON)
+        disableERTP: 1,             // Whether or not to disable ERTP controls for minions. (must use ERTPcontrol script in /scripts) (Set to 0 to enable)
+        disableQ: 0,                // Whether or not to disable Q controls for minions. (Set 0 to enable)
+        serverMinions: 0,           // Amount of minions each player gets once they spawn
+        collectPellets: 0,          // Enable collect pellets mode. To use just press P or Q. (Warning: this disables Q controls, so make sure that disableERT is 0)
+        minionsOnLeaderboard: 0,    // Whether or not to show minions on the leaderboard. (Set 0 to disable)
+
 
         tourneyMaxPlayers: 12,      // Maximum number of participants for tournament style game modes
         tourneyPrepTime: 10,        // Number of ticks to wait after all players are ready (1 tick = 1000 ms)
@@ -302,7 +312,14 @@ GameServer.prototype.onClientSocketOpen = function (ws) {
     this.socketCount++;
     this.clients.push(ws);
 
-    // Minion detection
+    if (this.config.serverMinions > 0) {
+        for (var i = 0; i < this.config.serverMinions; i++) {
+            this.bots.addMinion(ws.playerTracker);
+            ws.playerTracker.minionControl = true;
+        }
+        Logger.info("Added " + this.config.serverMinions + " minions");
+    }
+    /* Minion detection
     if (this.config.serverMinionThreshold) {
         if ((ws.lastAliveTime - this.startTime) / 1000 >= this.config.serverMinionIgnoreTime) {
             if (this.minionTest.length >= this.config.serverMinionThreshold) {
@@ -318,6 +335,15 @@ GameServer.prototype.onClientSocketOpen = function (ws) {
             }
             this.minionTest.push(ws.playerTracker);
         }
+    }*/
+};
+
+
+GameServer.prototype.checkMinion = function (ws) {
+    // Check headers (maybe have a config for this?)
+    if (!ws.upgradeReq.headers['user-agent'] || !ws.upgradeReq.headers['cache-control'] ||
+        ws.upgradeReq.headers['user-agent'].length < 50) {
+        ws.playerTracker.isMinion = false;
     }
 };
 
@@ -344,9 +370,9 @@ GameServer.prototype.onClientSocketClose = function (ws, code) {
         cell.setColor(color);
     }, this);
 
-    if (this.gameMode) {
-        this.gameMode.onClientSocketClose(this, ws);
-    }
+    //if (this.gameMode) {
+    //    this.gameMode.onClientSocketClose(this, ws);
+    //}
 };
 
 GameServer.prototype.onClientSocketError = function (ws, error) {

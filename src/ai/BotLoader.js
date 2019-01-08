@@ -47,7 +47,7 @@ BotLoader.prototype.addBot = function () {
     this.gameServer.clients.push(s);
     
     // Add to world
-    s.packetHandler.setNickname(this.getName());
+    s.packetHandler.setNickname(this._name);
 };
 
 BotLoader.prototype.addMinion = function(owner, name) {
@@ -68,7 +68,7 @@ BotLoader.prototype.addMinion = function(owner, name) {
 
     // Add to world & set name
     if (typeof name == "undefined" || name == "") {
-        name = this.gameServer.config.defaultName;
+        name = this._name;
     }
     s.packetHandler.setNickname(name);
 };

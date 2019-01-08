@@ -52,7 +52,3 @@ Mode.prototype.updateLB = function (gameServer) {
     gameServer.leaderboardType = this.packetLB;
     // Called when the leaderboard update function is called
 };
-
-Mode.prototype.onClientSocketClose = function (gameServer, socket) {
-    // override this in tournament inherited game modes
-};

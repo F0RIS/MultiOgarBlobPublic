@@ -68,8 +68,11 @@ PacketHandler.prototype.handshake_onCompleted = function (protocol, key) {
         16: this.message_onMouse.bind(this),
         17: this.message_onKeySpace.bind(this),
         18: this.message_onKeyQ.bind(this),
-        //19: AFK
         21: this.message_onKeyW.bind(this),
+        22: this.message_onKeyE.bind(this),
+        23: this.message_onKeyR.bind(this),
+        24: this.message_onKeyT.bind(this),
+        25: this.message_onKeyP.bind(this),
         99: this.message_onChat.bind(this),
         254: this.message_onStat.bind(this),
     };
@@ -214,14 +217,19 @@ PacketHandler.prototype.message_onKeySpace = function (message) {
 
 PacketHandler.prototype.message_onKeyQ = function (message) {
     if (message.length !== 1) return;
-    var tick = this.gameServer.getTick();
+    var tick = this.gameServer.tickCoutner;
     var dt = tick - this.lastQTick;
     if (dt < this.gameServer.config.ejectCooldown) {
         return;
     }
     this.lastQTick = tick;
-    this.pressQ = true;
+    if (this.socket.playerTracker.minionControl && !this.gameServer.config.disableQ) {
+        this.socket.playerTracker.miQ = !this.socket.playerTracker.miQ;
+    } else {
+        this.pressQ = true;
+    }
 };
+
 
 PacketHandler.prototype.message_onKeyW = function (message) {
     if (message.length !== 1) return;
@@ -232,6 +240,28 @@ PacketHandler.prototype.message_onKeyW = function (message) {
     }
     this.lastWTick = tick;
     this.pressW = true;
+};
+
+PacketHandler.prototype.message_onKeyE = function (message) {
+    if (this.gameServer.config.disableERTP) return;
+    this.socket.playerTracker.minionSplit = true;
+};
+
+PacketHandler.prototype.message_onKeyR = function (message) {
+    if (this.gameServer.config.disableERTP) return;
+    this.socket.playerTracker.minionEject = true;
+};
+
+PacketHandler.prototype.message_onKeyT = function (message) {
+    if (this.gameServer.config.disableERTP) return;
+    this.socket.playerTracker.minionFrozen = !this.socket.playerTracker.minionFrozen;
+};
+
+PacketHandler.prototype.message_onKeyP = function (message) {
+    if (this.gameServer.config.disableERTP) return;
+    if (this.gameServer.config.collectPellets) {
+        this.socket.playerTracker.collectPellets = !this.socket.playerTracker.collectPellets;
+    }
 };
 
 PacketHandler.prototype.message_onChat = function (message) {
@@ -295,10 +325,10 @@ PacketHandler.prototype.processMouse = function () {
 };
 
 PacketHandler.prototype.process = function () {
-    /*if (this.pressSpace) { // Split cell
+    if (this.pressSpace) { // Split cell
         this.socket.playerTracker.pressSpace();
         this.pressSpace = false;
-    }*/
+    }
     if (this.pressW) { // Eject mass
         this.socket.playerTracker.pressW();
         this.pressW = false;
@@ -307,9 +337,14 @@ PacketHandler.prototype.process = function () {
         this.socket.playerTracker.pressQ();
         this.pressQ = false;
     }
+    if (this.socket.playerTracker.minionSplit) {
+        this.socket.playerTracker.minionSplit = false;
+    }
+    if (this.socket.playerTracker.minionEject) {
+        this.socket.playerTracker.minionEject = false;
+    }
     this.processMouse();
 };
-
 PacketHandler.prototype.setNickname = function (text) {
     var name = "";
     var skin = null;

@@ -1,12 +1,18 @@
 ﻿var PlayerTracker = require('../PlayerTracker');
+var gameServer = require('../GameServer');
 var Vector = require('vector2-node');
 
 function BotPlayer() {
     PlayerTracker.apply(this, Array.prototype.slice.call(arguments));
+    //this.setColor(gameServer.getRandomColor());
+    
     this.splitCooldown = 0;
 }
+
 module.exports = BotPlayer;
 BotPlayer.prototype = new PlayerTracker();
+
+// Functions
 
 BotPlayer.prototype.getLowestCell = function () {
     // Gets the cell with the lowest mass
@@ -75,42 +81,42 @@ BotPlayer.prototype.decide = function (cell) {
                 // Same team cell
                 influence = 0;
             }
-            else if (cell._size > (check._size + 4) * 1.15) {
+            else if (cell.getSize() > (check.getSize() + 4) * 1.15) {
                 // Can eat it
-                 influence = check._size * 2.5;
+                influence = check.getSize() * 2.5;
             }
-            else if (check._size + 4 > cell._size * 1.15) {
+            else if (check.getSize() + 4 > cell.getSize() * 1.15) {
                 // Can eat me
-                influence = -check._size;
+                influence = -check.getSize();
             } else {
-                influence = -(check._size / cell._size) / 3;
+                influence = -(check.getSize() / cell.getSize()) / 3;
             }
         } else if (check.cellType == 1) {
             // Food
             influence = 1;
         } else if (check.cellType == 2) {
             // Virus
-            if (cell._size > check._size * 1.15) {
+            if (cell.getSize() > check.getSize() * 1.15) {
                 // Can eat it
                 if (this.cells.length == this.gameServer.config.playerMaxCells) {
                     // Won't explode
-                    influence = check._size * 2.5;
+                    influence = check.getSize() * 2.5;
                 }
                 else {
                     // Can explode
                     influence = -1;
                 }
-            } else if (check.isMotherCell && check._size > cell._size * 1.15) {
+            } else if (check.isMotherCell && check.getSize() > cell.getSize() * 1.15) {
                 // can eat me
                 influence = -1;
             }
         } else if (check.cellType == 3) {
             // Ejected mass
-            if (cell._size > check._size * 1.15)
+            if (cell.getSize() > check.getSize() * 1.15)
                 // can eat
-                influence = check._size;
+                influence = check.getSize();
         } else {
-            influence = check._size; // Might be TeamZ
+            influence = check.getSize(); // Might be TeamZ
         }
         
         // Apply influence if it isn't 0 or my cell
@@ -125,7 +131,7 @@ BotPlayer.prototype.decide = function (cell) {
         var distance = displacement.length();
         if (influence < 0) {
             // Get edge distance
-            distance -= cell._size + check._size;
+            distance -= cell.getSize() + check.getSize();
             if (check.cellType == 0) threats.push(check);
         }
         
@@ -136,23 +142,15 @@ BotPlayer.prototype.decide = function (cell) {
         // Produce force vector exerted by this entity on the cell
         var force = displacement.normalize().scale(influence);
         
-        // if (check.cellType == 0 && check.owner._name == "pl4") {
-        //     console.log(this._name);
-        //     console.log(cell._size > (check._size + 4) * 1.15);
-        //     console.log(cell._size < check._size * 5);
-        //     console.log( (!split));
-        //     console.log( this.splitCooldown);
-        //     console.log( this.cells.length);
-        // }
         // Splitting conditions
         if (check.cellType == 0 && 
-            cell._size > (check._size + 4) * 1.15 &&
-            cell._size < check._size * 5 &&
+            cell.getSize() > (check.getSize() + 4) * 1.15 &&
+            cell.getSize() < check.getSize() * 5 &&
             (!split) && 
             this.splitCooldown == 0 && 
-            this.cells.length < 8) {
+            this.cells.length < 3) {
             
-            var endDist = 780 + 40 - cell._size / 2 - check._size;
+            var endDist = 780 + 40 - cell.getSize() / 2 - check.getSize();
             
             if (endDist > 0 && distance < endDist) {
                 splitTarget = check;
@@ -171,15 +169,15 @@ BotPlayer.prototype.decide = function (cell) {
     if (split) {
         // Can be shortened but I'm too lazy
         if (threats.length > 0) {
-            if (this.largest(threats)._size > cell._size * 1.3) {
+            if (this.largest(threats).getSize() > cell.getSize() * 1.5) {
                 // Splitkill the target
                 this.mouse = {
                     x: splitTarget.position.x,
                     y: splitTarget.position.y
                 };
                 this.splitCooldown = 16;
-                // this.socket.packetHandler.pressSpace = true;
-                this.socket.playerTracker.pressSpace();
+                this.socket.packetHandler.pressSpace = true;
+                //this.gameServer.splitCells(this);
                 return;
             }
         }
@@ -191,7 +189,7 @@ BotPlayer.prototype.decide = function (cell) {
             };
             this.splitCooldown = 16;
             this.socket.packetHandler.pressSpace = true;
-            this.socket.playerTracker.pressSpace();
+            //this.gameServer.splitCells(this);
             return;
         }
     }
@@ -203,11 +201,12 @@ BotPlayer.prototype.decide = function (cell) {
 
 
 // Subfunctions
+
 BotPlayer.prototype.largest = function (list) {
     // Sort the cells by Array.sort() function to avoid errors
     var sorted = list.valueOf();
     sorted.sort(function (a, b) {
-        return b._size - a._size;
+        return b.getSize() - a.getSize();
     });
     
     return sorted[0];

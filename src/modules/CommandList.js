@@ -89,6 +89,50 @@ Commands.list = {
         }
         console.log("Added " + add + " player bots");
     },
+    minion: function (gameServer, split) {
+        var id = parseInt(split[1]);
+        var add = parseInt(split[2]);
+        var name = split.slice(3, split.length).join(' ');
+
+        // Error! ID is NaN
+        if (isNaN(id)) {
+            Logger.warn("Please specify a valid player id!");
+            return;
+        }
+
+        // Find ID specified and add/remove minions for them
+        for (var i in gameServer.clients) {
+            var client = gameServer.clients[i].playerTracker;
+	        var player = gameServer.getPlayerById(id);
+
+            if (client.pID == id) {
+
+                // Prevent the user from giving minions, to minions
+                if (client.isMi) {
+                    Logger.warn("You cannot give minions to a minion!");
+                    return;
+                };
+
+                // Remove minions
+                if (client.minionControl === true && isNaN(add)) {
+                    client.minionControl = false;
+                    client.miQ = 0;
+                    Logger.print("Succesfully removed minions for " + player.getFriendlyName());
+                    // Add minions
+                } else {
+                    client.minionControl = true;
+                    // Add minions for client
+                    if (isNaN(add)) add = 1;
+                    for (var i = 0; i < add; i++) {
+                        gameServer.bots.addMinion(client, name);
+                    }
+                    Logger.print("Added " + add + " minions for " + player.getFriendlyName());
+                }
+                break;
+            }
+        }
+    },
+
     ban: function (gameServer, split) {
         // Error message
         var logInvalid = "Please specify a valid player ID or IP address!";
