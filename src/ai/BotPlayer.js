@@ -150,7 +150,7 @@ BotPlayer.prototype.decide = function (cell) {
             cell._size < check._size * 5 &&
             (!split) && 
             this.splitCooldown == 0 && 
-            this.cells.length < 8) {
+            this.cells.length < 5) {
             
             var endDist = 780 + 40 - cell._size / 2 - check._size;
             
@@ -177,7 +177,7 @@ BotPlayer.prototype.decide = function (cell) {
                     x: splitTarget.position.x,
                     y: splitTarget.position.y
                 };
-                this.splitCooldown = 16;
+                this.splitCooldown = 5;
                 // this.socket.packetHandler.pressSpace = true;
                 this.socket.playerTracker.pressSpace();
                 return;
@@ -189,7 +189,7 @@ BotPlayer.prototype.decide = function (cell) {
                 x: splitTarget.position.x,
                 y: splitTarget.position.y
             };
-            this.splitCooldown = 16;
+            this.splitCooldown = 10;
             this.socket.packetHandler.pressSpace = true;
             this.socket.playerTracker.pressSpace();
             return;
