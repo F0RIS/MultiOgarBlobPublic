@@ -9,6 +9,7 @@
             "request": "launch",
             "console": "integratedTerminal",
             "name": "Запустить программу",
+            "cwd": "${workspaceFolder}/src",
             "program": "${workspaceRoot}/src/index.js"
         },
         {

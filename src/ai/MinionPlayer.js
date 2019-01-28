@@ -17,7 +17,8 @@ MinionPlayer.prototype.checkConnection = function () {
         this.isRemoved = true;
         return;
     }
-    if (this.owner.cells.length) {
+    //if owner is alive and current minion is dead
+    if (this.owner.cells.length && this.cells.length == 0) {
         this.joinGame(this.owner._name, this.owner._skin, true)
         if (!this.cells.length) this.socket.close();
     }

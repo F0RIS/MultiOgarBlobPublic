@@ -238,7 +238,7 @@ PlayerTracker.prototype.massChanged = function () {
 
 // Functions
 
-PlayerTracker.prototype.joinGame = function (name, skin) {
+PlayerTracker.prototype.joinGame = function (name, skin, isMinion) {
     if (this.cells.length > 0) return;
     //if (this.cells.length) return;
     if (name == null) name = "";
@@ -249,32 +249,36 @@ PlayerTracker.prototype.joinGame = function (name, skin) {
     this.freeRoam = false;
     this.spectateTarget = null;
 
-    // some old clients don't understand ClearAll message
-    // so we will send update for them
-    if (this.socket.packetHandler.protocol < 6) {
-        this.socket.sendPacket(new Packet.UpdateNodes(this, [], [], [], this.clientNodes));
+    if (!this.isMinion && this.socket.isConnected != null) {
+        // some old clients don't understand ClearAll message
+        // so we will send update for them
+        if (this.socket.packetHandler.protocol < 6) {
+            this.socket.sendPacket(new Packet.UpdateNodes(this, [], [], [], this.clientNodes));
+        }
+        this.socket.sendPacket(new Packet.ClearAll());
+        this.clientNodes = [];
+        this.scramble();
+        if (this.gameServer.config.serverScrambleLevel < 2) {
+            // no scramble / lightweight scramble
+            this.socket.sendPacket(new Packet.SetBorder(this, this.gameServer.border));
+        }
+        else if (this.gameServer.config.serverScrambleLevel == 3) {
+            // Scramble level 3 (no border)
+            // Ruins most known minimaps
+            var border = {
+                minx: this.gameServer.border.minx - (0x10000 + 10000000 * Math.random()),
+                miny: this.gameServer.border.miny - (0x10000 + 10000000 * Math.random()),
+                maxx: this.gameServer.border.maxx + (0x10000 + 10000000 * Math.random()),
+                maxy: this.gameServer.border.maxy + (0x10000 + 10000000 * Math.random())
+            };
+            this.socket.sendPacket(new Packet.SetBorder(this, border));
+        }
+        this.spawnCounter++;
     }
-    this.socket.sendPacket(new Packet.ClearAll());
-    this.clientNodes = [];
-    this.scramble();
-    if (this.gameServer.config.serverScrambleLevel < 2) {
-        // no scramble / lightweight scramble
-        this.socket.sendPacket(new Packet.SetBorder(this, this.gameServer.border));
-    }
-    else if (this.gameServer.config.serverScrambleLevel == 3) {
-        // Scramble level 3 (no border)
-        // Ruins most known minimaps
-        var border = {
-            minx: this.gameServer.border.minx - (0x10000 + 10000000 * Math.random()),
-            miny: this.gameServer.border.miny - (0x10000 + 10000000 * Math.random()),
-            maxx: this.gameServer.border.maxx + (0x10000 + 10000000 * Math.random()),
-            maxy: this.gameServer.border.maxy + (0x10000 + 10000000 * Math.random())
-        };
-        this.socket.sendPacket(new Packet.SetBorder(this, border));
-    }
-    this.spawnCounter++;
 
-    this.gameServer.gameMode.onPlayerSpawn(this.gameServer, this);
+    if (!this.isMinion || isMinion) { // dont spawn minions until user send his name
+        this.gameServer.gameMode.onPlayerSpawn(this.gameServer, this);
+    }
 };
 
 PlayerTracker.prototype.checkConnection = function () {

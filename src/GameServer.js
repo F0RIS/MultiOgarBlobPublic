@@ -133,8 +133,8 @@ function GameServer() {
 
         minionStartSize: 32,        // Start size of minions (mass = 32*32/100 = 10.24)
         minionMaxStartSize: 32,     // Maximum value of random start size for minions (set value higher than minionStartSize to enable)
-        minionCollideTeam: 0,       //Determines whether minions colide with their team in the Teams gamemode (0 = OFF, 1 = ON)
-        disableERTP: 1,             // Whether or not to disable ERTP controls for minions. (must use ERTPcontrol script in /scripts) (Set to 0 to enable)
+        minionCollideTeam: 0,       // Determines whether minions colide with their team in the Teams gamemode (0 = OFF, 1 = ON)
+        disableERTP: 0,             // Whether or not to disable ERTP controls for minions. (must use ERTPcontrol script in /scripts) (Set to 0 to enable)
         disableQ: 0,                // Whether or not to disable Q controls for minions. (Set 0 to enable)
         serverMinions: 0,           // Amount of minions each player gets once they spawn
         collectPellets: 0,          // Enable collect pellets mode. To use just press P or Q. (Warning: this disables Q controls, so make sure that disableERT is 0)
@@ -1037,9 +1037,9 @@ GameServer.prototype.updateMoveEngine = function () {
         var client = this.clients[i].playerTracker;
         var checkSize = !client.mergeOverride || client.cells.length == 1;
         for (var j = 0; j < client.cells.length; j++) {
-            // if (client.frozen) {
-            //     continue;
-            // }
+            if (client.frozen) {
+                continue;
+            }
             var cell1 = client.cells[j];
             if (cell1.isRemoved)
                 continue;
