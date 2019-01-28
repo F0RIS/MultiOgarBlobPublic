@@ -930,15 +930,13 @@ GameServer.prototype.checkRigidCollision = function (manifold) {
     if (manifold.cell1.owner != manifold.cell2.owner) {
         // Different owners
         // Minions don't collide with their team when the config value is 0
-        // if (this.gameMode.haveTeams && manifold.cell1.owner.isMinion || manifold.cell2.owner.isMinion && this.config.minionCollideTeam === 0) {
-        //     return false;
-        // } else {
-        //     // Different owners => same team
-        //     return this.gameMode.haveTeams &&
-        //         m.cell.owner.getTeam() == m.check.owner.getTeam();
-        // }
-        return this.gameMode.haveTeams &&
-            manifold.cell1.owner.getTeam() == manifold.cell2.owner.getTeam();
+        if (this.gameMode.haveTeams && manifold.cell1.owner.isMinion || manifold.cell2.owner.isMinion && this.config.minionCollideTeam === 0) {
+            return false;
+        } else {
+            // Different owners => same team
+            return this.gameMode.haveTeams &&
+                manifold.cell1.owner.getTeam() == manifold.cell2.owner.getTeam();
+        }
     }
     // The same owner
     if (manifold.cell1.owner.mergeOverride)
@@ -1016,16 +1014,16 @@ GameServer.prototype.resolveCollision = function (manifold) {
         minCell.owner.mergeOverride = false;
     }
 
-    var isMinion = (maxCell.owner && maxCell.owner.isMinion) ||
-        (minCell.owner && minCell.owner.isMinion);
-    if (!isMinion) {
-        // Consume effect
-        maxCell.onEat(minCell);
-        minCell.onEaten(maxCell);
+    // var isMinion = (maxCell.owner && maxCell.owner.isMinion) ||
+    //     (minCell.owner && minCell.owner.isMinion);
+    // if (!isMinion) {
+    // Consume effect
+    maxCell.onEat(minCell);
+    minCell.onEaten(maxCell);
 
-        // update bounds
-        this.updateNodeQuad(maxCell);
-    }
+    // update bounds
+    this.updateNodeQuad(maxCell);
+    // }
 
     // Remove cell
     minCell.setKiller(maxCell);
