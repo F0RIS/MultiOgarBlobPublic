@@ -339,14 +339,6 @@ GameServer.prototype.onClientSocketOpen = function (ws) {
 };
 
 
-GameServer.prototype.checkMinion = function (ws) {
-    // Check headers (maybe have a config for this?)
-    if (!ws.upgradeReq.headers['user-agent'] || !ws.upgradeReq.headers['cache-control'] ||
-        ws.upgradeReq.headers['user-agent'].length < 50) {
-        ws.playerTracker.isMinion = false;
-    }
-};
-
 GameServer.prototype.onClientSocketClose = function (ws, code) {
     if (ws._socket && ws._socket.destroy != null && typeof ws._socket.destroy == 'function') {
         ws._socket.destroy();
@@ -370,9 +362,9 @@ GameServer.prototype.onClientSocketClose = function (ws, code) {
         cell.setColor(color);
     }, this);
 
-    //if (this.gameMode) {
-    //    this.gameMode.onClientSocketClose(this, ws);
-    //}
+    if (this.gameMode) {
+        this.gameMode.onClientSocketClose(this, ws);
+    }
 };
 
 GameServer.prototype.onClientSocketError = function (ws, error) {
@@ -937,6 +929,14 @@ GameServer.prototype.checkRigidCollision = function (manifold) {
         return false;
     if (manifold.cell1.owner != manifold.cell2.owner) {
         // Different owners
+        // Minions don't collide with their team when the config value is 0
+        // if (this.gameMode.haveTeams && manifold.cell1.owner.isMinion || manifold.cell2.owner.isMinion && this.config.minionCollideTeam === 0) {
+        //     return false;
+        // } else {
+        //     // Different owners => same team
+        //     return this.gameMode.haveTeams &&
+        //         m.cell.owner.getTeam() == m.check.owner.getTeam();
+        // }
         return this.gameMode.haveTeams &&
             manifold.cell1.owner.getTeam() == manifold.cell2.owner.getTeam();
     }
@@ -1039,6 +1039,9 @@ GameServer.prototype.updateMoveEngine = function () {
         var client = this.clients[i].playerTracker;
         var checkSize = !client.mergeOverride || client.cells.length == 1;
         for (var j = 0; j < client.cells.length; j++) {
+            // if (client.frozen) {
+            //     continue;
+            // }
             var cell1 = client.cells[j];
             if (cell1.isRemoved)
                 continue;
@@ -1837,7 +1840,7 @@ GameServer.prototype.getStats = function () {
     var spectatePlayers = 0;
     for (var i = 0; i < this.clients.length; i++) {
         var socket = this.clients[i];
-        if (socket == null || !socket.isConnected)
+        if (socket == null || !socket.isConnected || socket.playerTracker.isMinion)
             continue;
         totalPlayers++;
         if (socket.playerTracker.cells.length > 0)
@@ -1909,7 +1912,7 @@ GameServer.prototype.pingServerTracker = function () {
         stpavg: this.updateTimeAvg >>> 0,           // [optional]  average server loop time
         chat: this.config.serverChat ? 1 : 0,       // [optional]  0 - chat disabled, 1 - chat enabled
         os: os.platform(),                          // [optional]  operating system
-        hoster_key : config.HOSTER_KEY
+        hoster_key: config.HOSTER_KEY
     };
 
     if (config.HOSTER_KEY == "YOUR_KEY") {

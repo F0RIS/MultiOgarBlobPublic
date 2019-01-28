@@ -325,6 +325,8 @@ PacketHandler.prototype.processMouse = function () {
 };
 
 PacketHandler.prototype.process = function () {
+    //TODO with this thing commented minions cant split, fix it
+    
     if (this.pressSpace) { // Split cell
         this.socket.playerTracker.pressSpace();
         this.pressSpace = false;

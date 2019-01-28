@@ -177,6 +177,7 @@ BotPlayer.prototype.decide = function (cell) {
                 };
                 this.splitCooldown = 16;
                 this.socket.packetHandler.pressSpace = true;
+                // this.socket.playerTracker.pressSpace();
                 //this.gameServer.splitCells(this);
                 return;
             }
@@ -189,6 +190,7 @@ BotPlayer.prototype.decide = function (cell) {
             };
             this.splitCooldown = 16;
             this.socket.packetHandler.pressSpace = true;
+            // this.socket.playerTracker.pressSpace();
             //this.gameServer.splitCells(this);
             return;
         }

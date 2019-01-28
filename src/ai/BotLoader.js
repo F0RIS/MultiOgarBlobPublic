@@ -70,5 +70,5 @@ BotLoader.prototype.addMinion = function(owner, name) {
     if (typeof name == "undefined" || name == "") {
         name = this._name;
     }
-    s.packetHandler.setNickname(name);
+    s.packetHandler.setNickname(owner.getName());
 };

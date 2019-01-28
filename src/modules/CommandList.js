@@ -108,7 +108,7 @@ Commands.list = {
             if (client.pID == id) {
 
                 // Prevent the user from giving minions, to minions
-                if (client.isMi) {
+                if (client.isMinion) {
                     Logger.warn("You cannot give minions to a minion!");
                     return;
                 };
@@ -473,6 +473,7 @@ Commands.list = {
     },
     playerlist: function (gameServer, split) {
         Logger.print("Showing " + gameServer.clients.length + " players: ");
+        Logger.print('Do "pl m" to list with minions\n');
         Logger.print(" ID     | IP              | P | " + fillChar('NICK', ' ', gameServer.config.playerMaxNickLength) + " | CELLS | SCORE  | POSITION    "); // Fill space
         Logger.print(fillChar('', '-', ' ID     | IP              |   |  | CELLS | SCORE  | POSITION    '.length + gameServer.config.playerMaxNickLength));
         var sockets = gameServer.clients.slice(0);
@@ -480,14 +481,17 @@ Commands.list = {
         for (var i = 0; i < sockets.length; i++) {
             var socket = sockets[i];
             var client = socket.playerTracker;
+            var type = split[1];
             
             // ID with 3 digits length
             var id = fillChar((client.pID), ' ', 6, true);
             
             // Get ip (15 digits length)
-            var ip = "[BOT]";
-            if (socket.isConnected != null) {
+            var ip = client.isMinion ? "[MINION]" : "[BOT]";
+            if (socket.isConnected != null && !client.isMinion) {
                 ip = socket.remoteAddress;
+            } else if (client.isMinion && type != "m") {
+                continue; // do not list minions
             }
             ip = fillChar(ip, ' ', 15);
             var protocol = gameServer.clients[i].packetHandler.protocol;
@@ -507,7 +511,7 @@ Commands.list = {
                 if (socket.closeReason.message)
                     reason += socket.closeReason.message;
                 Logger.print(" " + id + " | " + ip + " | " + protocol + " | " + reason);
-            } else if (!socket.packetHandler.protocol && socket.isConnected) {
+            } else if (!socket.packetHandler.protocol && socket.isConnected && !client.isMinion) {
                 Logger.print(" " + id + " | " + ip + " | " + protocol + " | " + "[CONNECTING]");
             } else if (client.spectate) {
                 nick = "in free-roam";

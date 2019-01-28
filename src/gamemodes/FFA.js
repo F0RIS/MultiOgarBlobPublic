@@ -34,42 +34,61 @@ FFA.prototype.leaderboardAddSort = function (player, leaderboard) {
 // Override
 
 FFA.prototype.onPlayerSpawn = function (gameServer, player) {
-    player.setColor(player.isMinion ? { r: 240, g: 240, b: 255 } : gameServer.getRandomColor());
+    // player.setColor(player.isMinion ? { r: 240, g: 240, b: 255 } : gameServer.getRandomColor());
+    player.color = gameServer.getRandomColor();
     // Spawn player
     gameServer.spawnPlayer(player);
 };
 
 FFA.prototype.updateLB = function (gameServer) {
+    // gameServer.leaderboardType = this.packetLB;
+    // var lb = gameServer.leaderboard;
+    // // Loop through all clients
+    // for (var i = 0; i < gameServer.clients.length; i++) {
+    //     var client = gameServer.clients[i];
+    //     if (client == null) continue;
+        
+    //     var player = client.playerTracker;
+    //     if (player.isRemoved)
+    //         continue; // Don't add disconnected players to list
+        
+    //     var playerScore = player.getScore();
+        
+    //     if (player.cells.length <= 0)
+    //         continue;
+        
+    //     if (lb.length == 0) {
+    //         // Initial player
+    //         lb.push(player);
+    //         continue;
+    //     } else if (lb.length < gameServer.config.serverMaxLB) {
+    //         this.leaderboardAddSort(player, lb);
+    //     } else {
+    //         // 10 in leaderboard already
+    //         if (playerScore > lb[gameServer.config.serverMaxLB - 1].getScore()) {
+    //             lb.pop();
+    //             this.leaderboardAddSort(player, lb);
+    //         }
+    //     }
+    // }
+    
+    // this.rankOne = lb[0];
+
+    //code from MultiOgar-Edited
     gameServer.leaderboardType = this.packetLB;
     var lb = gameServer.leaderboard;
-    // Loop through all clients
-    for (var i = 0; i < gameServer.clients.length; i++) {
-        var client = gameServer.clients[i];
-        if (client == null) continue;
-        
-        var player = client.playerTracker;
-        if (player.isRemoved)
-            continue; // Don't add disconnected players to list
-        
-        var playerScore = player.getScore();
-        
-        if (player.cells.length <= 0)
-            continue;
-        
-        if (lb.length == 0) {
-            // Initial player
-            lb.push(player);
-            continue;
-        } else if (lb.length < gameServer.config.serverMaxLB) {
-            this.leaderboardAddSort(player, lb);
-        } else {
-            // 10 in leaderboard already
-            if (playerScore > lb[gameServer.config.serverMaxLB - 1].getScore()) {
-                lb.pop();
-                this.leaderboardAddSort(player, lb);
-            }
-        }
-    }
     
+    for (var i = 0, pos = 0; i < gameServer.clients.length; i++) {
+        var player = gameServer.clients[i].playerTracker;
+        if (player.isRemoved || !player.cells.length || 
+            player.socket.isConnected == false || (!gameServer.config.minionsOnLeaderboard && player.isMinion))
+            continue;
+
+        for (var j = 0; j < pos; j++)
+            if (lb[j]._score < player._score) break;
+
+        lb.splice(j, 0, player);
+        pos++;
+    }
     this.rankOne = lb[0];
 }

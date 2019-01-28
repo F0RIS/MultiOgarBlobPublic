@@ -52,7 +52,7 @@ Virus.prototype.onEaten = function (consumer) {
     var angle = 2 * Math.PI * Math.random();
     var step = 2 * Math.PI / masses.length;
     for (var i = 0; i < masses.length; i++) {
-        if (!this.gameServer.splitPlayerCell(client, consumer, angle, masses[i]*1.499)) {
+        if (!this.gameServer.splitPlayerCell(client, consumer, angle, masses[i])) {
             break;
         }
         angle += step;
