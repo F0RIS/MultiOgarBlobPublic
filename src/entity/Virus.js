@@ -45,7 +45,7 @@ Virus.prototype.onEaten = function (consumer) {
     for (var i = 1; i < masses.length; i += 2)
         massesMix.push(masses[i]);
     for (var i = 2; i < masses.length; i += 2)
-        massesMix.push(masses[i]);
+        massesMix.push(masses[i]*1.55);
     masses = massesMix;
     
     // Blow up the cell...
