@@ -77,11 +77,6 @@ var playerCommands = {
             "\nUptime (m): " + stats.uptime +
             "\nUpdate_time: " + stats.update_time);
     },
-//	rules: function (args) {
-//
-// Антон, добавишь код для правил
-//    },
-/*
 	color: function (args){
 		var arr = args.trim().split(" ");
 		if (this.playerTracker.cells.length > 0) {
@@ -286,6 +281,22 @@ var playerCommands = {
         // console.log(res);
         // this.gameServer.sendChatMessage(null, this.playerTracker, JSON.stringify(res));
         this.playerTracker.socket.sendPacket(new Packet.PlayerList(res));
+    ka: function (args) {
+        if (this.playerTracker.userRole != UserRoleEnum.ADMIN) {
+            this.writeLine("ERROR: access denied!");
+            return;
+        }
+        var count = 0;
+        var cell = this.playerTracker.cells[0];
+        for (var i = 0; i < this.gameServer.clients.length; i++) {
+            var playerTracker = this.gameServer.clients[i].playerTracker;
+            while (playerTracker.cells.length > 0) {
+                this.gameServer.removeNode(playerTracker.cells[0]);
+                count++;
+            }
+        }
+        this.writeLine("You killed everyone. (" + count + (" cells.)"));
+    },
     },
     login: function (args) {
         var password = (args || "").trim();
