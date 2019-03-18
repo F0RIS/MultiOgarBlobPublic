@@ -7,9 +7,10 @@
         {
             "type": "node",
             "request": "launch",
+            "name": "Launch Program",
+            "cwd": "${workspaceFolder}\\src",
             "console": "integratedTerminal",
-            "name": "Запустить программу",
-            "program": "${workspaceRoot}/src/index.js"
+            "program": "${workspaceFolder}\\src\\index.js"
         },
         {
             "type": "node",
@@ -17,6 +18,6 @@
             "name": "Attach by Process ID",
             // "processId": "${command:PickProcess}"
             "port": 5858
-        }
+        },
     ]
 }

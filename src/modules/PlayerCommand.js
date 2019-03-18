@@ -65,6 +65,10 @@ var playerCommands = {
             "/pl - playerlist",
             "/help - show this commands list"
         ];
+        if (this.playerTracker.userRole == UserRoleEnum.ADMIN) {
+            comList.push("", "ADMIN commands:");
+            comList.push("/ka or /killall - kill all players");
+        }
         this.writeLine("\nAvailable commands:\n" + comList.join("\n"));
     },
     info: function (args) {
@@ -77,39 +81,32 @@ var playerCommands = {
             "\nUptime (m): " + stats.uptime +
             "\nUpdate_time: " + stats.update_time);
     },
-//	rules: function (args) {
-//
-// Антон, добавишь код для правил
-//    },
-/*
-	color: function (args){
-		var arr = args.trim().split(" ");
-		if (this.playerTracker.cells.length > 0) {
-			this.playerTracker.cells[0].setColor({ r: parseInt(arr[1]), g: parseInt(arr[2]), b: parseInt(arr[3]) });
-		} else {
-			this.writeLine("Can't be done bacuse you are dead");
-		}
-		
-		
-        this.writeLine("color changed");
-	},*/
-    /*skin: function (args) {
-        if (this.playerTracker.cells.length > 0) {
-            this.writeLine("ERROR: Cannot change skin while player in game!");
-            return;
-        }
-        var skinName = "";
-        if (args) skinName = args.trim();
-        if (!this.gameServer.checkSkinName(skinName)) {
-            this.writeLine("ERROR: Invalid skin name!");
-            return;
-        }
-        this.playerTracker.setSkin(skinName);
-        if (skinName == "")
-            this.writeLine("Your skin was removed");
-        else
-            this.writeLine("Your skin set to " + skinName);
-    },*/
+    // color: function (args) {
+    //     var arr = args.trim().split(" ");
+    //     if (this.playerTracker.cells.length > 0) {
+    //         this.playerTracker.cells[0].setColor({ r: parseInt(arr[1]), g: parseInt(arr[2]), b: parseInt(arr[3]) });
+    //     } else {
+    //         this.writeLine("Can't be done bacuse you are dead");
+    //     }
+    //     this.writeLine("color changed");
+    // },
+    // skin: function (args) {
+    //     if (this.playerTracker.cells.length > 0) {
+    //         this.writeLine("ERROR: Cannot change skin while player in game!");
+    //         return;
+    //     }
+    //     var skinName = "";
+    //     if (args) skinName = args.trim();
+    //     if (!this.gameServer.checkSkinName(skinName)) {
+    //         this.writeLine("ERROR: Invalid skin name!");
+    //         return;
+    //     }
+    //     this.playerTracker.setSkin(skinName);
+    //     if (skinName == "")
+    //         this.writeLine("Your skin was removed");
+    //     else
+    //         this.writeLine("Your skin set to " + skinName);
+    // },
     kill: function (args) {
         if (this.playerTracker.cells.length < 1) {
             this.writeLine("You cannot kill yourself, because you're still not joined to the game!");
@@ -321,7 +318,18 @@ var playerCommands = {
         }
         Logger.warn("SHUTDOWN REQUEST FROM " + this.playerTracker.socket.remoteAddress + " as " + this.playerTracker.userAuth);
         process.exit(0);
-    }
+    },
+    killall: function (args) {
+        if (this.playerTracker.userRole != UserRoleEnum.ADMIN) {
+            this.writeLine("ERROR: access denied!");
+            return;
+        }
+        this.gameServer.commands.killall(this.gameServer, null);
+        this.gameServer.sendChatMessage(this.playerTracker, null, "Killed all players");
+    },
+    ka: function (args) {
+        playerCommands.killall.bind(this)(args);
+    },
 };
 
 
