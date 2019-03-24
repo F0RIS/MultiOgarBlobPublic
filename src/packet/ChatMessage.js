@@ -6,9 +6,9 @@ var UserRoleEnum = require("../enum/UserRoleEnum");
 function ChatMessage(sender, message, player) {
     this.sender = sender;
     this.message = message;
-    this.sendUserID = player.sendUserID;
-    this.sendPlayerID = player.userRole > UserRoleEnum.USER;
-    this.newFormat = player.minimapIDs;
+    this.sendUserID = true; //send user id to all users
+    this.sendPlayerID = player.userRole > UserRoleEnum.USER; //send pID for mod chat commands (kill, kick, ban, mute)
+    this.player = player;
 }
 
 module.exports = ChatMessage;
@@ -22,7 +22,7 @@ ChatMessage.prototype.build = function (protocol) {
         name = this.sender.getName();
         if (name == null || name.length == 0) {
             if (this.sender.cells.length > 0)
-                name = "An unnamed cell";
+                name = this.player.defaultName;
             else
                 name = "Spectator";
 
@@ -31,10 +31,10 @@ ChatMessage.prototype.build = function (protocol) {
             color = this.sender.cells[0].getColor();
         }
     }
-    
+
     var writer = new BinaryWriter();
     writer.writeUInt8(0x63);            // message id (decimal 99)
-    
+
     // flags
     var flags = 0;
     if (this.sender == null)
@@ -46,7 +46,7 @@ ChatMessage.prototype.build = function (protocol) {
     else if (this.sender.userRole == UserRoleEnum.USER) //youtuber
         flags = 0x08;           // youtuber message
 
-    if (this.sendUserID && this.sender && this.sender.userID != 0){
+    if (this.sendUserID && this.sender) {
         flags |= 0x10;
     }
 
@@ -56,26 +56,25 @@ ChatMessage.prototype.build = function (protocol) {
     if (this.sender && this.sender.showChatSuffix) {
         flags |= 0x02;
     }
+    if (this.sender && this.sender.isVIP) {
+        flags |= 0x01;
+    }
 
     // Free flag - 0x01
-    
+
     writer.writeUInt8(flags);
     writer.writeUInt8(color.r >> 0);
     writer.writeUInt8(color.g >> 0);
     writer.writeUInt8(color.b >> 0);
 
-    if (this.sendUserID && this.sender && this.sender.userID != 0){
-        if (this.newFormat) {
-            writer.writeInt32(this.sender.userID);
-        } else {
-            writer.writeDouble(this.sender.userID);
-        }
+    if (this.sendUserID && this.sender) {
+        writer.writeInt32(this.sender.userID);
     }
-    
+
     if (this.sender && this.sendPlayerID) { //sending player ID to moderators
         writer.writeUInt32(this.sender.pID);
-    }    
-    
+    }
+
     if (protocol <= 5) {
         writer.writeStringZeroUnicode(name);
         writer.writeStringZeroUnicode(text);

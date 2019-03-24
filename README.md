@@ -1,7 +1,7 @@
 # MultiOgarBlob
 Ogar game server with fast and smooth vanilla physics and multi-protocol support.
 
-Current version: **1.2.69.5**
+Current version: **1.2.69.6**
 
 ## Install
 

@@ -29,6 +29,10 @@ function PlayerTracker(gameServer, socket) {
     this._skin = "";
     this._nameUtf8 = null;
     this._nameUnicode = null;
+
+    // this.defaultName = "An unnamed cell";
+    this.defaultName = "Blober";
+
     this._skinUtf8 = null;
     this.color = { r: 0, g: 0, b: 0 };
     this.viewNodes = [];
@@ -119,11 +123,11 @@ PlayerTracker.prototype.scramble = function () {
 };
 
 PlayerTracker.prototype.getFriendlyName = function () {
-    var name = this.getName();
+     var name = this.getName();
     if (!name) name = "";
     name = name.trim();
     if (name.length == 0)
-        name = "An unnamed cell";
+        name = this.defaultName;
     return name;
 };
 
