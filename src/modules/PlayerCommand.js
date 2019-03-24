@@ -3,6 +3,7 @@ var Logger = require('./Logger');
 var UserRoleEnum = require("../enum/UserRoleEnum");
 var Packet = require("../packet");
 var CommandList = require("./CommandList");
+var pjson = require('../../package.json');
 
 var ErrorTextInvalidCommand = "ERROR: Unknown command, type /help for command list";
 var ErrorTextBadCommand = "ERROR: Bad command!";
@@ -75,6 +76,7 @@ var playerCommands = {
 
         var stats = JSON.parse(this.gameServer.stats);
         this.writeLine('\nServer name: ' + stats.server_name +
+            "\nServer ver: " + pjson.version +
             "\nGame mode: " + stats.gamemode +
             "\nPlayers: " + stats.current_players + "/" + stats.max_players +
             "\nSpectators: " + stats.spectators +
