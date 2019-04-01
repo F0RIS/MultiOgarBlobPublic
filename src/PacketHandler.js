@@ -160,7 +160,7 @@ PacketHandler.prototype.message_setParams = function (message) {
     }
 
     var fbID = reader.readDouble();
-    player.userID = fbID
+    player.userID = !isNaN(fbID) ? fbID : 0;
     if (player.userID != 0) {
         player.sendUserID = true; // fb id in chat, minimap
     }
