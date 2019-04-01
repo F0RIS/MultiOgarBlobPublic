@@ -1833,6 +1833,10 @@ GameServer.prototype.getStats = function () {
         'uptime': Math.round((this.stepDateTime - this.startTime) / 1000 / 60),
         'start_time': this.startTime
     };
+    if (!this.config.ip) {
+        getPublicIP().then(ip => this.config.ip = ip);
+    }
+    s.ip = this.config.ip + ":" + this.config.serverPort;
     this.stats = JSON.stringify(s);
 };
 
@@ -1921,3 +1925,20 @@ function trackerRequest(options, type, body) {
     req.write(body);
     req.end()
 };
+
+function getPublicIP() {
+    return new Promise(resolve => {
+        var options = {
+            host: 'ipv4bot.whatismyipaddress.com',
+            port: 80,
+            path: '/'
+        };
+        http.get(options, function (res) {
+            res.on("data", function (chunk) {
+                resolve(chunk.toString('utf8'));
+            });
+        }).on('error', function (e) {
+            resolve("unknown");
+        });
+    });
+}

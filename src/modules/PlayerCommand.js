@@ -81,7 +81,8 @@ var playerCommands = {
             "\nPlayers: " + stats.current_players + "/" + stats.max_players +
             "\nSpectators: " + stats.spectators +
             "\nUptime (m): " + stats.uptime +
-            "\nUpdate_time: " + stats.update_time);
+            "\nUpdate_time: " + stats.update_time +
+            "\nIP: " + stats.ip);
     },
     // color: function (args) {
     //     var arr = args.trim().split(" ");
