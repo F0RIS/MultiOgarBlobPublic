@@ -301,6 +301,9 @@ PacketHandler.prototype.process = function () {
     }*/
     if (this.pressW) { // Eject mass
         this.socket.playerTracker.pressW();
+        if (this.gameServer.config.fastFeed) {
+        this.socket.playerTracker.pressW();
+        }
         this.pressW = false;
     }
     if (this.pressQ) { // Q Press
