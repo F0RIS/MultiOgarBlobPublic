@@ -1736,3 +1736,5 @@ fucking
 docking
 f*ing
 *ing
+shlt
+sh|t
