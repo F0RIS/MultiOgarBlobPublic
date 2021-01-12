@@ -1576,6 +1576,8 @@ zaebat
 مص كسك
 يلعن دينك
 smd
+smdu
+smfd
 s.md
 sm.d
 hdp
